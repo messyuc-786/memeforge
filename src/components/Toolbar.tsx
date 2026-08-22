@@ -8,7 +8,8 @@ import {
   Sparkles,
   Sliders,
   Edit3,
-  LayoutTemplate
+  LayoutTemplate,
+  Heart
 } from 'lucide-react';
 import { useMeme } from '../context/MemeContext';
 import { ToolMode } from '../types';
@@ -59,7 +60,7 @@ export const Toolbar: React.FC = () => {
   };
 
   return (
-    <aside className="w-full lg:w-96 bg-dark-900/90 backdrop-blur-md border-t lg:border-t-0 lg:border-l border-dark-700/80 flex flex-col h-auto lg:h-[calc(100vh-65px)] overflow-hidden shadow-2xl z-20">
+    <aside className="w-full lg:w-96 bg-dark-900/90 backdrop-blur-md border-t lg:border-t-0 lg:border-l border-dark-700/80 flex flex-col h-auto lg:h-[calc(100vh-65px)] overflow-hidden shadow-2xl z-20 justify-between">
       {/* Studio Modes Tab Bar */}
       <div className="flex items-center gap-1.5 p-2.5 overflow-x-auto no-scrollbar border-b border-dark-800 bg-dark-950/60">
         {TOOL_TABS.map((tab) => {
@@ -68,13 +69,13 @@ export const Toolbar: React.FC = () => {
             <button
               key={tab.mode}
               onClick={() => setToolMode(tab.mode)}
-              className={`px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
+              className={`px-3 py-2 rounded-2xl text-xs font-black whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
                 isActive
-                  ? 'bg-gradient-to-r from-brand-orange via-brand-pink to-brand-purple text-white shadow-lg shadow-brand-orange/20 scale-[1.02]'
+                  ? 'bg-gradient-to-r from-brand-orange via-brand-pink to-brand-purple text-white shadow-lg shadow-brand-orange/20 scale-[1.03] border border-white/20'
                   : 'bg-dark-800/80 hover:bg-dark-700 text-slate-300'
               }`}
             >
-              <span>{tab.icon}</span>
+              <span className="text-base">{tab.icon}</span>
               <span>{tab.label}</span>
             </button>
           );
@@ -82,16 +83,22 @@ export const Toolbar: React.FC = () => {
 
         <button
           onClick={() => setIsTemplatesModalOpen(true)}
-          className="px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-dark-800/80 hover:bg-dark-700 text-brand-yellow hover:text-white transition flex items-center gap-1.5 shrink-0 border border-brand-yellow/30"
+          className="px-3 py-2 rounded-2xl text-xs font-black whitespace-nowrap bg-dark-800/80 hover:bg-dark-700 text-brand-yellow hover:text-white transition flex items-center gap-1.5 shrink-0 border border-brand-yellow/30"
         >
-          <span>📚</span>
+          <span className="text-base">📚</span>
           <span>Templates</span>
         </button>
       </div>
 
       {/* Active Panel Body Container */}
-      <div className="flex-1 overflow-y-auto max-h-[500px] lg:max-h-full">
+      <div className="flex-1 overflow-y-auto max-h-[480px] lg:max-h-full">
         {renderActivePanel()}
+      </div>
+
+      {/* Bottom Sticky Credit Badge */}
+      <div className="p-2 text-center border-t border-dark-800 bg-dark-950/90 text-[10px] text-slate-400 font-bold flex items-center justify-center gap-1">
+        <span>© 2026 MemeForge • Created by </span>
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow to-brand-pink font-extrabold">Urvashi Chandan</span>
       </div>
     </aside>
   );
