@@ -24,7 +24,7 @@ export const MemeDNAModal: React.FC = () => {
                   MEME DNA ANALYSIS
                 </h2>
                 <span className="text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-brand-pink/20 text-brand-pink border border-brand-pink/40">
-                  AI CREATIVE SCORE
+                  VIRAL QUALITY SCORE
                 </span>
               </div>
               <p className="text-xs text-slate-400">Deep structural breakdown &amp; engagement score</p>
@@ -102,10 +102,10 @@ export const MemeDNAModal: React.FC = () => {
             ))}
           </div>
 
-          {/* AI Creative Guidance / Suggestions */}
+          {/* Pro Creative Guidance / Suggestions */}
           <div className="flex flex-col gap-2 p-3.5 rounded-2xl bg-brand-purple/10 border border-brand-purple/30">
             <span className="text-xs font-black uppercase text-brand-yellow flex items-center gap-1.5">
-              <Lightbulb className="w-4 h-4 text-brand-yellow" /> AI Creative Guidance Tips
+              <Lightbulb className="w-4 h-4 text-brand-yellow" /> Creator Pro Tips &amp; Suggestions
             </span>
             <ul className="flex flex-col gap-1.5">
               {creativeScore.suggestions.map((sug, i) => (

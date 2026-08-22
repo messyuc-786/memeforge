@@ -148,9 +148,9 @@ export const LandingPage: React.FC = () => {
           {/* Top Energetic Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-purple-400/40 shadow-xl mb-4 text-xs font-black uppercase tracking-wider text-slate-200">
             <span className="text-base animate-bounce-subtle">🔥</span>
-            <span>MEMEFORGE 2026 STUDIO</span>
+            <span>MEMEFORGE STUDIO 2026</span>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-brand-orange to-brand-pink text-white shadow-sm font-black">
-              AI ENGINE v4
+              PRO CREATOR SUITE
             </span>
           </div>
 
@@ -166,7 +166,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Subtitle */}
           <p className="text-sm sm:text-base md:text-lg text-slate-200 font-semibold max-w-xl mb-6 sm:mb-8 leading-relaxed">
-            Your idea. AI magic.{' '}
+            Your idea.{' '}
             <span className="text-white font-extrabold underline decoration-pink-500 decoration-3">
               Legendary memes in seconds.
             </span>
