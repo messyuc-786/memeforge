@@ -26,11 +26,11 @@ export const PopularAndStudioRow: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xl">🔥</span>
-                <h2 className="text-xl sm:text-2xl font-black font-anton uppercase tracking-wide text-slate-900">
+                <h2 className="text-xl sm:text-2xl font-black font-anton uppercase tracking-wide text-white">
                   POPULAR TEMPLATES
                 </h2>
               </div>
-              <p className="text-xs text-slate-500 font-semibold">
+              <p className="text-xs text-slate-400 font-semibold">
                 Click any template to customize in Studio
               </p>
             </div>
@@ -52,9 +52,9 @@ export const PopularAndStudioRow: React.FC = () => {
               <div
                 key={template.id}
                 onClick={() => handleSelectTemplate(template)}
-                className="group relative rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-brand-orange transition-all duration-300 p-2.5 flex flex-col gap-2 cursor-pointer hover:-translate-y-1"
+                className="group relative rounded-2xl bg-slate-900/90 border border-slate-800 shadow-sm hover:shadow-xl hover:border-brand-orange transition-all duration-300 p-2.5 flex flex-col gap-2 cursor-pointer hover:-translate-y-1"
               >
-                <div className="w-full aspect-square rounded-xl bg-slate-950 overflow-hidden border border-slate-200 flex items-center justify-center p-1.5 relative">
+                <div className="w-full aspect-square rounded-xl bg-slate-950 overflow-hidden border border-slate-800 flex items-center justify-center p-1.5 relative">
                   <img
                     src={template.previewUrl}
                     alt={template.title}
@@ -69,7 +69,7 @@ export const PopularAndStudioRow: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col">
-                  <span className="font-extrabold text-xs text-slate-800 truncate group-hover:text-brand-orange transition-colors">
+                  <span className="font-extrabold text-xs text-slate-200 truncate group-hover:text-brand-orange transition-colors">
                     {template.title}
                   </span>
                   <span className="text-[10px] text-slate-400 font-bold uppercase">

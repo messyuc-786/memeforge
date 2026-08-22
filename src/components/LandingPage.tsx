@@ -469,32 +469,32 @@ export const LandingPage: React.FC = () => {
 
       {/* 2. GENERATED MULTI-VERSE OUTPUT (If idea generated) */}
       {currentUniverse && (
-        <div id="meme-universe-results" className="bg-[#faf8fc] text-slate-900 border-t border-slate-200">
+        <div id="meme-universe-results" className="bg-[#0b0f19] text-white border-t border-slate-800">
           <ContentUniverseSection />
         </div>
       )}
 
       {/* 3. ✨ EXPLORE BY CATEGORY (Image Cards) */}
-      <div className="bg-[#faf8fc] text-slate-900 border-t border-slate-200">
+      <div className="bg-[#0b0f19] text-white border-t border-slate-800/80">
         <CategoryExplorer />
       </div>
 
       {/* 4. POPULAR TEMPLATES + AI MEME STUDIO SIDE-BY-SIDE */}
-      <div className="bg-[#f4f2f8] text-slate-900 border-t border-slate-200">
+      <div className="bg-[#0f172a] text-white border-t border-slate-800/80">
         <PopularAndStudioRow />
       </div>
 
-      {/* 5. TRENDING NOW (Clean Light Cards) */}
-      <div className="bg-[#faf8fc] text-slate-900 border-t border-slate-200">
+      {/* 5. TRENDING NOW */}
+      <div className="bg-[#0b0f19] text-white border-t border-slate-800/80">
         <TrendsSection />
       </div>
 
-      {/* 6. DESI / INDIA MEME STUDIO (Warm Indian Presets) */}
-      <div className="bg-[#fffbeb] text-slate-900 border-t border-amber-200">
+      {/* 6. DESI / INDIA MEME STUDIO */}
+      <div className="bg-[#0f172a] text-white border-t border-amber-500/20">
         <DesiModeSection />
       </div>
 
-      {/* 7. COMMUNITY & INSPIRATION (Dark Premium Section) */}
+      {/* 7. COMMUNITY & INSPIRATION */}
       <div className="bg-slate-950 text-white border-t border-slate-800">
         <CommunitySection />
       </div>

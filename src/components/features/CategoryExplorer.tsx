@@ -40,11 +40,11 @@ export const CategoryExplorer: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xl">✨</span>
-            <h2 className="text-xl sm:text-2xl font-black font-anton uppercase tracking-wide text-slate-900">
+            <h2 className="text-xl sm:text-2xl font-black font-anton uppercase tracking-wide text-white">
               EXPLORE BY CATEGORY
             </h2>
           </div>
-          <p className="text-xs text-slate-500 font-semibold mt-0.5">
+          <p className="text-xs text-slate-400 font-semibold mt-0.5">
             Find your meme universe across internet culture
           </p>
         </div>
@@ -54,7 +54,7 @@ export const CategoryExplorer: React.FC = () => {
             soundService.playPop();
             setIsTemplatesModalOpen(true);
           }}
-          className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-black uppercase tracking-wider transition shadow-sm"
+          className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-black uppercase tracking-wider transition border border-slate-700 shadow-sm"
         >
           <span>View All 100+</span>
           <ArrowRight className="w-3.5 h-3.5" />
