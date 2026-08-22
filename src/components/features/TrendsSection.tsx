@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flame, TrendingUp, Sparkles, Zap, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Flame, TrendingUp, Sparkles, Zap, ArrowRight, ChevronLeft, ChevronRight, Radio } from 'lucide-react';
 import { TRENDS_DATA } from '../../data/trendsData';
 import { useMeme } from '../../context/MemeContext';
 import { soundService } from '../../services/soundService';
@@ -96,17 +96,17 @@ export const TrendsSection: React.FC = () => {
 
   return (
     <section className="w-full max-w-7xl mx-auto px-4 py-4 flex flex-col gap-4">
-      {/* Header & Filter Controls matching Reference */}
+      {/* Header & Filter Controls */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xl">🔥</span>
-            <h2 className="text-xl sm:text-2xl font-black font-anton uppercase tracking-wide text-slate-900">
+            <Radio className="w-5 h-5 text-pink-400 animate-pulse" />
+            <h2 className="text-xl sm:text-2xl font-black font-anton uppercase tracking-wide text-white">
               TRENDING NOW
             </h2>
           </div>
-          <p className="text-xs text-slate-500 font-semibold mt-0.5">
-            What's hot in the meme world right now
+          <p className="text-xs text-slate-400 font-semibold mt-0.5">
+            Live cultural signals travelling through the Meme Universe
           </p>
         </div>
 
@@ -121,33 +121,33 @@ export const TrendsSection: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-full text-xs font-bold transition ${
                 selectedCategory === cat
-                  ? 'bg-pink-500 text-white shadow-md'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+                  ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-[0_0_15px_rgba(236,72,153,0.5)] border border-pink-300'
+                  : 'bg-[#120e2e]/80 text-slate-300 border border-purple-500/30 hover:bg-[#1a1442]'
               }`}
             >
               {cat}
             </button>
           ))}
           <div className="hidden sm:flex items-center gap-1 ml-2">
-            <button className="p-1 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+            <button className="p-1 rounded-full bg-[#151035] border border-purple-500/30 text-slate-300 hover:bg-purple-900/60 transition">
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
-            <button className="p-1 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+            <button className="p-1 rounded-full bg-[#151035] border border-purple-500/30 text-slate-300 hover:bg-purple-900/60 transition">
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Grid of Compact Trend Cards matching Reference */}
+      {/* Grid of Cosmic Signal Trend Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-2.5">
         {filtered.map((trend) => (
           <div
             key={trend.id}
             onClick={() => handleCreateFromTrend(trend.sampleIdea)}
-            className="group relative rounded-2xl bg-white border border-slate-200 p-2 shadow-sm hover:shadow-md hover:border-pink-500 transition-all duration-200 cursor-pointer flex flex-col gap-2 hover:-translate-y-0.5"
+            className="group relative rounded-2xl bg-[#0c0922] border border-purple-500/30 p-2 shadow-sm hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:border-pink-500/80 transition-all duration-200 cursor-pointer flex flex-col gap-2 hover:-translate-y-0.5"
           >
-            <div className="w-full aspect-video rounded-xl bg-slate-900 overflow-hidden relative">
+            <div className="w-full aspect-video rounded-xl bg-slate-950 overflow-hidden relative border border-purple-500/20">
               <img
                 src={trend.image}
                 alt={trend.title}
@@ -157,10 +157,10 @@ export const TrendsSection: React.FC = () => {
             </div>
 
             <div className="flex flex-col">
-              <span className="text-xs font-extrabold text-slate-800 truncate group-hover:text-pink-600 transition-colors">
+              <span className="text-xs font-extrabold text-slate-200 truncate group-hover:text-pink-400 transition-colors">
                 {trend.title}
               </span>
-              <span className="text-[10px] text-slate-400 font-bold">
+              <span className="text-[10px] text-slate-400 font-bold font-mono">
                 {trend.volume}
               </span>
             </div>

@@ -47,18 +47,18 @@ export const CategoryExplorer: React.FC = () => {
   };
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 py-8">
-      {/* Section Header matching Reference */}
+    <section className="w-full max-w-7xl mx-auto px-4 py-6">
+      {/* Section Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xl text-amber-500">✨</span>
-            <h2 className="text-xl sm:text-2xl font-black font-anton uppercase tracking-wide text-slate-900">
-              EXPLORE THE MEME UNIVERSE
+            <span className="text-xl text-pink-400">✨</span>
+            <h2 className="text-xl sm:text-2xl font-black font-anton uppercase tracking-wide text-white flex items-center gap-2">
+              <span>EXPLORE THE MEME UNIVERSE</span>
             </h2>
           </div>
-          <p className="text-xs text-slate-500 font-semibold mt-0.5">
-            Multiple memes. Multiple vibes.
+          <p className="text-xs text-slate-400 font-semibold mt-0.5">
+            Discover hilarious meme destinations across cosmic internet culture
           </p>
         </div>
 
@@ -67,20 +67,20 @@ export const CategoryExplorer: React.FC = () => {
             soundService.playPop();
             setIsTemplatesModalOpen(true);
           }}
-          className="text-xs font-black text-slate-700 hover:text-pink-600 flex items-center gap-1 transition"
+          className="text-xs font-black text-pink-400 hover:text-cyan-300 flex items-center gap-1 transition"
         >
           <span>View All</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
 
-      {/* Categories Row matching Reference Layout */}
+      {/* Cosmic Categories Row */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-11 gap-2.5">
         {MEME_CATEGORIES.map((cat) => (
           <div
             key={cat.id}
             onClick={() => handleCategoryClick(cat)}
-            className="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-slate-950 border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-pink-500 transition-all duration-300 cursor-pointer flex flex-col justify-end p-2 text-white hover:-translate-y-1"
+            className="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-[#0c0922] border border-purple-500/30 shadow-md hover:shadow-[0_0_25px_rgba(236,72,153,0.4)] hover:border-pink-500 transition-all duration-300 cursor-pointer flex flex-col justify-end p-2.5 text-white hover:-translate-y-1"
           >
             {/* Background Visual Image */}
             <img
@@ -90,15 +90,15 @@ export const CategoryExplorer: React.FC = () => {
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
 
-            {/* Dark Gradient Overlay for Crisp Text Readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-transparent" />
+            {/* Dark Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#05040e] via-[#05040e]/60 to-transparent" />
 
             {/* Content Info */}
             <div className="relative z-10 flex flex-col">
               <span className="text-xs font-black text-white group-hover:text-pink-400 transition-colors truncate">
                 {cat.emoji} {cat.title}
               </span>
-              <span className="text-[9px] font-bold text-slate-300/80">
+              <span className="text-[9px] font-bold text-slate-300/80 font-mono">
                 {categoryCounts[cat.id] || '10K+ memes'}
               </span>
             </div>
@@ -111,15 +111,15 @@ export const CategoryExplorer: React.FC = () => {
             soundService.playPop();
             setIsTemplatesModalOpen(true);
           }}
-          className="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-gradient-to-br from-purple-100 to-pink-100 border border-purple-200 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col items-center justify-center p-2 text-center hover:-translate-y-1"
+          className="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-gradient-to-br from-purple-900/60 to-indigo-950/80 border border-purple-500/40 shadow-md hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] hover:border-purple-400 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center p-2 text-center hover:-translate-y-1 backdrop-blur-md"
         >
-          <div className="w-7 h-7 rounded-xl bg-purple-600 text-white flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-            <span className="text-xs">:::</span>
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-500 to-purple-600 text-white flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-lg">
+            <Sparkles className="w-4 h-4" />
           </div>
-          <span className="text-[11px] font-black text-slate-900 uppercase tracking-wider leading-tight">
+          <span className="text-[11px] font-black text-white uppercase tracking-wider leading-tight">
             View All
           </span>
-          <span className="text-xs text-purple-600 font-bold">→</span>
+          <span className="text-xs text-pink-400 font-bold">100+ →</span>
         </div>
       </div>
     </section>

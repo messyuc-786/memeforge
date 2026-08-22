@@ -59,7 +59,7 @@ export const ContentUniverseSection: React.FC = () => {
   };
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 py-8">
+    <section className="w-full max-w-7xl mx-auto px-4 py-6">
       {/* 2-Column Responsive Layout: Left 7 cols (Meme Cards) + Right 5 cols (AI Studio) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Left Side: 👑 YOUR MEME UNIVERSE (7 Columns) */}
@@ -68,13 +68,13 @@ export const ContentUniverseSection: React.FC = () => {
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl">👑</span>
-                <h2 className="text-xl sm:text-2xl font-black font-anton uppercase tracking-wide text-slate-900">
+                <span className="text-xl text-amber-400">👑</span>
+                <h2 className="text-xl sm:text-2xl font-black font-anton uppercase tracking-wide text-white">
                   YOUR MEME UNIVERSE
                 </h2>
               </div>
-              <p className="text-xs text-slate-500 font-semibold">
-                Multiple memes. Multiple vibes. All from your idea.
+              <p className="text-xs text-slate-400 font-semibold">
+                Multiple memes. Multiple vibes. All forged from your idea.
               </p>
             </div>
 
@@ -83,14 +83,14 @@ export const ContentUniverseSection: React.FC = () => {
                 soundService.playPop();
                 setIsTemplatesModalOpen(true);
               }}
-              className="text-xs font-black text-slate-700 hover:text-pink-600 flex items-center gap-1 transition"
+              className="text-xs font-black text-pink-400 hover:text-cyan-300 flex items-center gap-1 transition"
             >
               <span>View All</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* Vibe Filter Tabs matching Reference */}
+          {/* Vibe Filter Tabs */}
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar mb-4">
             {[
               { id: 'all', label: 'All', emoji: '✨' },
@@ -108,8 +108,8 @@ export const ContentUniverseSection: React.FC = () => {
                 }}
                 className={`px-3 py-1 rounded-full text-xs font-black transition flex items-center gap-1 ${
                   activeTab === tab.id
-                    ? 'bg-pink-500 text-white shadow-md'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+                    ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-[0_0_15px_rgba(236,72,153,0.5)] border border-pink-300'
+                    : 'bg-[#120e2e]/80 text-slate-300 border border-purple-500/30 hover:bg-[#1a1442]'
                 }`}
               >
                 <span>{tab.emoji}</span>
@@ -123,12 +123,12 @@ export const ContentUniverseSection: React.FC = () => {
             {filteredConcepts.map((concept) => (
               <div
                 key={concept.id}
-                className="group relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between p-2.5 text-white hover:-translate-y-1"
+                className="group relative rounded-2xl overflow-hidden bg-[#0c0922] border border-purple-500/30 shadow-md hover:shadow-[0_0_30px_rgba(168,85,247,0.35)] hover:border-pink-500/80 transition-all duration-300 flex flex-col justify-between p-2.5 text-white hover:-translate-y-1"
               >
                 {/* Template Image Viewport with Dark Gradient Overlay */}
                 <div
                   onClick={() => loadConceptIntoStudio(concept)}
-                  className="relative w-full aspect-square rounded-xl overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center cursor-pointer"
+                  className="relative w-full aspect-square rounded-xl overflow-hidden bg-slate-950 border border-purple-500/20 flex items-center justify-center cursor-pointer"
                 >
                   <img
                     src={concept.templatePreviewUrl}
@@ -138,11 +138,11 @@ export const ContentUniverseSection: React.FC = () => {
                   />
 
                   {/* Dark Overlays with Meme Impact Typography */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80 p-2 flex flex-col justify-between text-center select-none pointer-events-none">
-                    <span className="font-impact text-xs sm:text-[13px] uppercase tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2 leading-tight">
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-transparent to-black/85 p-2 flex flex-col justify-between text-center select-none pointer-events-none">
+                    <span className="font-impact text-xs sm:text-[13px] uppercase tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] line-clamp-2 leading-tight">
                       {concept.topText}
                     </span>
-                    <span className="font-impact text-xs sm:text-[13px] uppercase tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] line-clamp-2 leading-tight">
+                    <span className="font-impact text-xs sm:text-[13px] uppercase tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] line-clamp-2 leading-tight">
                       {concept.bottomText}
                     </span>
                   </div>
@@ -154,7 +154,7 @@ export const ContentUniverseSection: React.FC = () => {
                       soundService.playSparkle();
                       setSelectedDNAConcept(concept);
                     }}
-                    className="absolute top-1.5 right-1.5 p-1 rounded-lg bg-black/60 text-white/80 hover:text-white transition"
+                    className="absolute top-1.5 right-1.5 p-1 rounded-lg bg-black/70 text-white/80 hover:text-white transition"
                   >
                     <MoreVertical className="w-3.5 h-3.5" />
                   </button>
@@ -164,9 +164,9 @@ export const ContentUniverseSection: React.FC = () => {
                 <div className="flex items-center gap-1.5 pt-2">
                   <button
                     onClick={() => loadConceptIntoStudio(concept)}
-                    className="flex-1 py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-[11px] uppercase transition flex items-center justify-center gap-1"
+                    className="flex-1 py-1.5 px-2 rounded-xl bg-[#18133b] hover:bg-[#251d5c] text-white font-bold text-[11px] uppercase transition flex items-center justify-center gap-1 border border-purple-500/30"
                   >
-                    <Edit3 className="w-3 h-3" />
+                    <Edit3 className="w-3 h-3 text-cyan-400" />
                     <span>Edit</span>
                   </button>
 
@@ -175,7 +175,7 @@ export const ContentUniverseSection: React.FC = () => {
                       soundService.playSparkle();
                       setSelectedRemixConcept(concept);
                     }}
-                    className="flex-1 py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-purple-900 text-white font-bold text-[11px] uppercase transition flex items-center justify-center gap-1"
+                    className="flex-1 py-1.5 px-2 rounded-xl bg-[#18133b] hover:bg-purple-900/80 text-white font-bold text-[11px] uppercase transition flex items-center justify-center gap-1 border border-purple-500/30"
                   >
                     <RefreshCw className="w-3 h-3 text-pink-400" />
                     <span>Remix</span>
@@ -184,7 +184,7 @@ export const ContentUniverseSection: React.FC = () => {
                   <button
                     onClick={() => handleDownloadDirect(concept)}
                     title="Download Meme"
-                    className="p-1.5 rounded-xl bg-pink-500 hover:bg-pink-600 text-white transition flex items-center justify-center shadow"
+                    className="p-1.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:brightness-110 text-white transition flex items-center justify-center shadow-[0_0_15px_rgba(236,72,153,0.4)]"
                   >
                     <Download className="w-3.5 h-3.5" />
                   </button>
@@ -195,29 +195,29 @@ export const ContentUniverseSection: React.FC = () => {
         </div>
 
         {/* Right Side: AI MEME STUDIO Card with 3D Phone Mockup (5 Columns) */}
-        <div className="lg:col-span-5 rounded-3xl bg-gradient-to-br from-[#0b0f19] via-[#1a103c] to-[#2e1065] border-2 border-purple-500/40 p-6 shadow-2xl flex flex-col justify-between text-white relative overflow-hidden">
+        <div className="lg:col-span-5 rounded-3xl cosmic-glass border-2 border-purple-500/40 p-6 shadow-2xl flex flex-col justify-between text-white relative overflow-hidden">
           {/* Ambient Glows */}
-          <div className="absolute -top-16 -right-16 w-48 h-48 bg-pink-500/25 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-16 -right-16 w-48 h-48 bg-pink-500/25 rounded-full blur-3xl pointer-events-none animate-pulse-glow" />
           <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-purple-500/25 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 flex flex-col gap-4">
             {/* Header */}
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-2xl font-black font-anton uppercase tracking-wide text-white">
+                <h3 className="text-2xl font-black font-anton uppercase tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-cyan-400">
                   AI MEME STUDIO
                 </h3>
-                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-pink-500 text-white shadow-sm">
+                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-pink-500 text-white shadow-[0_0_10px_#ec4899]">
                   NEW
                 </span>
               </div>
               <p className="text-xs text-slate-300 font-medium mt-1">
-                Turn one idea into memes, reels, GIFs &amp; more.
+                Turn one idea into memes, reels, GIFs &amp; multi-platform assets.
               </p>
             </div>
 
             {/* Feature Icons Row */}
-            <div className="grid grid-cols-5 gap-1 text-center pt-1">
+            <div className="grid grid-cols-5 gap-1.5 text-center pt-1">
               {[
                 { icon: <Sparkles className="w-4 h-4 mx-auto text-amber-400" />, label: 'AI Generate' },
                 { icon: <MessageSquare className="w-4 h-4 mx-auto text-pink-400" />, label: 'Auto Captions' },
@@ -225,7 +225,7 @@ export const ContentUniverseSection: React.FC = () => {
                 { icon: <Zap className="w-4 h-4 mx-auto text-cyan-400" />, label: 'GIF Maker' },
                 { icon: <Share2 className="w-4 h-4 mx-auto text-emerald-400" />, label: 'Platform Optimize' }
               ].map((feat, i) => (
-                <div key={i} className="flex flex-col items-center gap-1 p-2 rounded-xl bg-white/5 border border-white/10">
+                <div key={i} className="flex flex-col items-center gap-1 p-2 rounded-xl bg-white/5 border border-purple-500/20 hover:border-purple-500/50 transition">
                   {feat.icon}
                   <span className="text-[9px] font-bold text-slate-300 leading-tight">{feat.label}</span>
                 </div>
@@ -233,7 +233,7 @@ export const ContentUniverseSection: React.FC = () => {
             </div>
 
             {/* Visual 3D Phone Preview Mockup */}
-            <div className="relative mt-2 p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-purple-950 border border-purple-500/30 flex items-center justify-between gap-4 overflow-hidden shadow-inner">
+            <div className="relative mt-2 p-4 rounded-2xl bg-gradient-to-br from-[#0c0922] to-[#1c1242] border border-purple-500/30 flex items-center justify-between gap-4 overflow-hidden shadow-inner">
               <div className="flex flex-col gap-1 z-10">
                 <span className="text-[10px] font-black uppercase text-amber-400">VIRAL REEL PREVIEW</span>
                 <span className="font-impact text-sm sm:text-base uppercase tracking-wide text-white leading-tight">
@@ -242,13 +242,13 @@ export const ContentUniverseSection: React.FC = () => {
                 <span className="text-[10px] text-slate-400 font-medium">9:16 Shorts • Instagram • Facebook</span>
               </div>
 
-              <div className="w-20 h-28 rounded-xl bg-slate-950 border-2 border-pink-500/50 overflow-hidden shrink-0 relative shadow-xl rotate-3">
+              <div className="w-20 h-28 rounded-xl bg-slate-950 border-2 border-pink-500/50 overflow-hidden shrink-0 relative shadow-2xl rotate-3">
                 <img
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
                   alt="Reel Preview"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/60 p-1 flex flex-col justify-between text-center">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/60 p-1 flex flex-col justify-between text-center">
                   <span className="text-[8px] font-impact text-white uppercase">SALARY DAY</span>
                   <span className="text-[8px] font-impact text-amber-300 uppercase">BROKE AF 😭</span>
                 </div>
@@ -264,7 +264,7 @@ export const ContentUniverseSection: React.FC = () => {
                 setCurrentView('studio');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:brightness-110 text-white font-black text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-xl shadow-pink-500/25 active:scale-98"
+              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 hover:brightness-110 text-white font-black text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(236,72,153,0.4)] active:scale-98"
             >
               <Wand2 className="w-4 h-4 text-yellow-300" />
               <span>Try AI Studio →</span>
