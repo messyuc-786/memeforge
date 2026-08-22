@@ -1,20 +1,38 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import {
+  AppView,
   AspectRatioType,
   CanvasElement,
+  ContentUniversePack,
   DrawPath,
   FilterSettings,
+  GeneratedMemeConcept,
   MemeProject,
   MemeTemplate,
-  SpeechBubbleElement,
-  StickerElement,
-  TextElement,
-  ToolMode
+  MemeTone,
+  ToolMode,
+  VideoMemeProject
 } from '../types';
 import { getDimensionsForAspectRatio } from '../engine/canvasEngine';
 import { loadProjectFromStorage, saveProjectToStorage } from '../services/storageService';
+import { generateContentUniverse } from '../services/ai/contentUniverseService';
+import { createDefaultVideoProject } from '../services/ai/videoMemeService';
+import { soundService } from '../services/soundService';
 
 interface MemeContextType {
+  // Navigation & View
+  currentView: AppView;
+  setCurrentView: (view: AppView) => void;
+
+  // Content Universe (One Idea -> Many Formats)
+  activeIdea: string;
+  setActiveIdea: (idea: string) => void;
+  currentUniverse: ContentUniversePack | null;
+  setCurrentUniverse: (pack: ContentUniversePack | null) => void;
+  isGeneratingUniverse: boolean;
+  generateUniverse: (idea: string, tone?: MemeTone) => Promise<void>;
+
+  // Canvas Studio State
   project: MemeProject;
   setProject: React.Dispatch<React.SetStateAction<MemeProject>>;
   toolMode: ToolMode;
@@ -64,14 +82,35 @@ interface MemeContextType {
   // Project Level
   clearProject: () => void;
   loadTemplate: (template: MemeTemplate) => void;
+  loadConceptIntoStudio: (concept: GeneratedMemeConcept) => void;
   
-  // Modals
+  // Video Meme Studio
+  videoProject: VideoMemeProject;
+  setVideoProject: React.Dispatch<React.SetStateAction<VideoMemeProject>>;
+
+  // Saved Memes Library
+  savedMemes: GeneratedMemeConcept[];
+  saveMemeToLibrary: (concept: GeneratedMemeConcept) => void;
+  deleteSavedMeme: (id: string) => void;
+
+  // Modals & Drawers
   isExportModalOpen: boolean;
   setIsExportModalOpen: (open: boolean) => void;
   isSettingsModalOpen: boolean;
   setIsSettingsModalOpen: (open: boolean) => void;
   isTemplatesModalOpen: boolean;
   setIsTemplatesModalOpen: (open: boolean) => void;
+  isSavedMemesModalOpen: boolean;
+  setIsSavedMemesModalOpen: (open: boolean) => void;
+  isPlatformModalOpen: boolean;
+  setIsPlatformModalOpen: (open: boolean) => void;
+  isPutMeInMemeModalOpen: boolean;
+  setIsPutMeInMemeModalOpen: (open: boolean) => void;
+
+  selectedDNAConcept: GeneratedMemeConcept | null;
+  setSelectedDNAConcept: (concept: GeneratedMemeConcept | null) => void;
+  selectedRemixConcept: GeneratedMemeConcept | null;
+  setSelectedRemixConcept: (concept: GeneratedMemeConcept | null) => void;
 }
 
 const DEFAULT_FILTERS: FilterSettings = {
@@ -97,7 +136,7 @@ const createDefaultProject = (): MemeProject => {
     backgroundImageUrl: null,
     backgroundColor: '#0F1117',
     topText: 'WHEN YOU DISCOVER',
-    bottomText: 'MEMEFORGE STUDIO 🔥',
+    bottomText: 'MEMEFORGE AI STUDIO 🔥',
     elements: [],
     drawPaths: [],
     filters: { ...DEFAULT_FILTERS },
@@ -105,9 +144,20 @@ const createDefaultProject = (): MemeProject => {
   };
 };
 
+const STORAGE_KEY_SAVED_MEMES = 'memeforge_user_saved_memes';
+
 const MemeContext = createContext<MemeContextType | undefined>(undefined);
 
 export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Navigation & View
+  const [currentView, setCurrentView] = useState<AppView>('home');
+
+  // Content Universe
+  const [activeIdea, setActiveIdea] = useState<string>('When your manager says the meeting will only take five minutes');
+  const [currentUniverse, setCurrentUniverse] = useState<ContentUniversePack | null>(null);
+  const [isGeneratingUniverse, setIsGeneratingUniverse] = useState<boolean>(false);
+
+  // Canvas Studio State
   const [project, setProject] = useState<MemeProject>(() => {
     const saved = loadProjectFromStorage();
     return saved || createDefaultProject();
@@ -115,6 +165,19 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [toolMode, setToolMode] = useState<ToolMode>('meme');
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
+
+  // Video Studio
+  const [videoProject, setVideoProject] = useState<VideoMemeProject>(createDefaultVideoProject);
+
+  // Saved Memes Library
+  const [savedMemes, setSavedMemes] = useState<GeneratedMemeConcept[]>(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY_SAVED_MEMES);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
 
   // History stack for Undo / Redo
   const [history, setHistory] = useState<MemeProject[]>([]);
@@ -131,6 +194,12 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
+  const [isSavedMemesModalOpen, setIsSavedMemesModalOpen] = useState(false);
+  const [isPlatformModalOpen, setIsPlatformModalOpen] = useState(false);
+  const [isPutMeInMemeModalOpen, setIsPutMeInMemeModalOpen] = useState(false);
+
+  const [selectedDNAConcept, setSelectedDNAConcept] = useState<GeneratedMemeConcept | null>(null);
+  const [selectedRemixConcept, setSelectedRemixConcept] = useState<GeneratedMemeConcept | null>(null);
 
   // Push to history when project state changes
   useEffect(() => {
@@ -145,9 +214,17 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     setHistoryIndex((prev) => prev + 1);
 
-    // Auto-save to LocalStorage
     saveProjectToStorage(project);
   }, [project]);
+
+  // Sync saved memes to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_SAVED_MEMES, JSON.stringify(savedMemes));
+    } catch {
+      // ignore
+    }
+  }, [savedMemes]);
 
   const canUndo = historyIndex > 0;
   const canRedo = historyIndex < history.length - 1;
@@ -170,6 +247,53 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setHistoryIndex(targetIdx);
     setProject(targetState);
     saveProjectToStorage(targetState);
+  };
+
+  const generateUniverse = async (idea: string, tone: MemeTone = 'relatable') => {
+    setIsGeneratingUniverse(true);
+    soundService.playSparkle();
+    try {
+      const { universe } = await generateContentUniverse(idea, tone);
+      setCurrentUniverse(universe);
+      soundService.playVictoryChime();
+    } catch (err) {
+      console.error('Universe generation failed:', err);
+    } finally {
+      setIsGeneratingUniverse(false);
+    }
+  };
+
+  const loadConceptIntoStudio = (concept: GeneratedMemeConcept) => {
+    const dims = getDimensionsForAspectRatio(concept.aspectRatio);
+    setSelectedElementId(null);
+    setProject({
+      id: `project-${Date.now()}`,
+      name: concept.templateTitle,
+      timestamp: Date.now(),
+      canvasWidth: dims.width,
+      canvasHeight: dims.height,
+      aspectRatio: concept.aspectRatio,
+      backgroundImageUrl: concept.templatePreviewUrl,
+      backgroundColor: '#0F1117',
+      topText: concept.topText,
+      bottomText: concept.bottomText,
+      elements: [],
+      drawPaths: [],
+      filters: { ...DEFAULT_FILTERS },
+      watermark: true
+    });
+    setToolMode('meme');
+    setCurrentView('studio');
+    soundService.playPop();
+  };
+
+  const saveMemeToLibrary = (concept: GeneratedMemeConcept) => {
+    setSavedMemes((prev) => [concept, ...prev.filter((m) => m.id !== concept.id)]);
+    soundService.playPop();
+  };
+
+  const deleteSavedMeme = (id: string) => {
+    setSavedMemes((prev) => prev.filter((m) => m.id !== id));
   };
 
   const selectedElement = project.elements.find((e) => e.id === selectedElementId) || null;
@@ -326,6 +450,14 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <MemeContext.Provider
       value={{
+        currentView,
+        setCurrentView,
+        activeIdea,
+        setActiveIdea,
+        currentUniverse,
+        setCurrentUniverse,
+        isGeneratingUniverse,
+        generateUniverse,
         project,
         setProject,
         toolMode,
@@ -363,12 +495,28 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsDrawEraser,
         clearProject,
         loadTemplate,
+        loadConceptIntoStudio,
+        videoProject,
+        setVideoProject,
+        savedMemes,
+        saveMemeToLibrary,
+        deleteSavedMeme,
         isExportModalOpen,
         setIsExportModalOpen,
         isSettingsModalOpen,
         setIsSettingsModalOpen,
         isTemplatesModalOpen,
-        setIsTemplatesModalOpen
+        setIsTemplatesModalOpen,
+        isSavedMemesModalOpen,
+        setIsSavedMemesModalOpen,
+        isPlatformModalOpen,
+        setIsPlatformModalOpen,
+        isPutMeInMemeModalOpen,
+        setIsPutMeInMemeModalOpen,
+        selectedDNAConcept,
+        setSelectedDNAConcept,
+        selectedRemixConcept,
+        setSelectedRemixConcept
       }}
     >
       {children}

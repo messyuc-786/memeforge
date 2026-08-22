@@ -21,6 +21,10 @@ class SoundEngine {
     return this.ctx;
   }
 
+  public setMuted(muted: boolean): void {
+    this.isMuted = muted;
+  }
+
   public toggleMute(): boolean {
     this.isMuted = !this.isMuted;
     return this.isMuted;

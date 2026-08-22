@@ -1,38 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { LandingPage } from './components/LandingPage';
 import { MemeCanvas } from './components/MemeCanvas';
 import { Toolbar } from './components/Toolbar';
+import { VideoMemeStudio } from './components/features/VideoMemeStudio';
+import { TrendsSection } from './components/features/TrendsSection';
+import { CommunitySection } from './components/features/CommunitySection';
+import { DesiModeSection } from './components/features/DesiModeSection';
+import { MemeDNAModal } from './components/features/MemeDNAModal';
+import { RemixDrawer } from './components/features/RemixDrawer';
+import { PlatformOptimizerModal } from './components/features/PlatformOptimizerModal';
+import { PutMeInMemeModal } from './components/features/PutMeInMemeModal';
+import { SavedMemesModal } from './components/features/SavedMemesModal';
 import { TemplatesModal } from './components/panels/TemplatesModal';
 import { SettingsModal } from './components/panels/SettingsModal';
 import { ExportModal } from './components/panels/ExportModal';
 import { useMeme } from './context/MemeContext';
-import { ToolMode } from './types';
+import { soundService } from './services/soundService';
+import { Footer } from './components/Footer';
 
 export const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'landing' | 'studio'>('landing');
   const {
+    currentView,
+    setCurrentView,
     setToolMode,
     undo,
     redo,
     selectedElementId,
     removeElement,
-    setSelectedElementId
+    setSelectedElementId,
+    setIsSavedMemesModalOpen,
+    setIsPutMeInMemeModalOpen
   } = useMeme();
 
-  const handleStartStudio = (mode: ToolMode = 'meme') => {
-    setToolMode(mode);
+  const handleStartStudio = (mode = 'meme') => {
+    setToolMode(mode as any);
     setCurrentView('studio');
   };
 
   const handleGoHome = () => {
-    setCurrentView('landing');
+    setCurrentView('home');
   };
 
-  // Keyboard Shortcuts (Undo, Redo, Delete, Escape)
+  // Global Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // If user is typing inside an input or textarea, don't trigger global shortcuts
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
         return;
       }
@@ -61,22 +73,130 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [undo, redo, selectedElementId, removeElement, setSelectedElementId]);
 
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'home':
+        return <LandingPage onStart={handleStartStudio} />;
+      case 'studio':
+        return (
+          <main className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+            <MemeCanvas />
+            <Toolbar />
+          </main>
+        );
+      case 'video':
+        return (
+          <div className="flex-1 flex flex-col justify-between">
+            <VideoMemeStudio />
+            <Footer />
+          </div>
+        );
+      case 'trends':
+        return (
+          <div className="flex-1 flex flex-col justify-between pt-6">
+            <TrendsSection />
+            <Footer />
+          </div>
+        );
+      case 'desi':
+        return (
+          <div className="flex-1 flex flex-col justify-between pt-6">
+            <DesiModeSection />
+            <Footer />
+          </div>
+        );
+      case 'community':
+        return (
+          <div className="flex-1 flex flex-col justify-between pt-6">
+            <CommunitySection />
+            <Footer />
+          </div>
+        );
+      default:
+        return <LandingPage onStart={handleStartStudio} />;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col font-sans selection:bg-brand-orange selection:text-white">
+    <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col font-sans selection:bg-brand-orange selection:text-white pb-16 lg:pb-0">
       {/* Top Navbar */}
-      <Navbar onGoHome={handleGoHome} isLanding={currentView === 'landing'} />
+      <Navbar onGoHome={handleGoHome} isLanding={currentView === 'home'} />
 
       {/* Main Viewport */}
-      {currentView === 'landing' ? (
-        <LandingPage onStart={handleStartStudio} />
-      ) : (
-        <main className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
-          <MemeCanvas />
-          <Toolbar />
-        </main>
-      )}
+      {renderCurrentView()}
 
-      {/* Modals */}
+      {/* Mobile Bottom Navigation Dock (Phone Experience) */}
+      <nav className="fixed bottom-0 inset-x-0 z-40 lg:hidden bg-dark-900/95 backdrop-blur-xl border-t border-dark-800 px-3 py-2 flex items-center justify-around text-xs shadow-2xl">
+        <button
+          onClick={() => {
+            soundService.playPop();
+            setCurrentView('home');
+          }}
+          className={`flex flex-col items-center gap-0.5 font-bold ${
+            currentView === 'home' ? 'text-brand-orange' : 'text-slate-400'
+          }`}
+        >
+          <span className="text-lg">🚀</span>
+          <span>Forge AI</span>
+        </button>
+
+        <button
+          onClick={() => {
+            soundService.playPop();
+            setCurrentView('studio');
+          }}
+          className={`flex flex-col items-center gap-0.5 font-bold ${
+            currentView === 'studio' ? 'text-brand-orange' : 'text-slate-400'
+          }`}
+        >
+          <span className="text-lg">🎨</span>
+          <span>Studio</span>
+        </button>
+
+        <button
+          onClick={() => {
+            soundService.playPop();
+            setCurrentView('video');
+          }}
+          className={`flex flex-col items-center gap-0.5 font-bold ${
+            currentView === 'video' ? 'text-brand-orange' : 'text-slate-400'
+          }`}
+        >
+          <span className="text-lg">🎥</span>
+          <span>Video</span>
+        </button>
+
+        <button
+          onClick={() => {
+            soundService.playPop();
+            setCurrentView('desi');
+          }}
+          className={`flex flex-col items-center gap-0.5 font-bold ${
+            currentView === 'desi' ? 'text-brand-orange' : 'text-slate-400'
+          }`}
+        >
+          <span className="text-lg">🇮🇳</span>
+          <span>Desi</span>
+        </button>
+
+        <button
+          onClick={() => {
+            soundService.playPop();
+            setIsSavedMemesModalOpen(true);
+          }}
+          className="flex flex-col items-center gap-0.5 font-bold text-slate-400"
+        >
+          <span className="text-lg">⭐</span>
+          <span>Vault</span>
+        </button>
+      </nav>
+
+      {/* Global Modals & Drawers */}
+      <MemeDNAModal />
+      <RemixDrawer />
+      <PlatformOptimizerModal />
+      <PutMeInMemeModal />
+      <SavedMemesModal />
       <TemplatesModal />
       <SettingsModal />
       <ExportModal />
