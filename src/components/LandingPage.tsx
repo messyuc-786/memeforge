@@ -219,6 +219,49 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
 
+        {/* --- ADDITIONAL BACKGROUND FLOATING MEMES & EMOJIS --- */}
+        {/* Floating Meme Graphic: Pepe Frog (Left) */}
+        <div className="hidden lg:flex absolute left-20 xl:left-24 top-60 pointer-events-none select-none z-0 animate-float-wide opacity-85">
+          <div className="relative w-20 h-20 rounded-2xl bg-emerald-950/80 border-2 border-emerald-400/50 p-1.5 shadow-xl flex items-center justify-center rotate-[-12deg]">
+            <svg viewBox="0 0 100 100" className="w-full h-full">
+              <ellipse cx="50" cy="55" rx="42" ry="36" fill="#22c55e" />
+              <ellipse cx="32" cy="35" rx="16" ry="18" fill="#ffffff" />
+              <ellipse cx="68" cy="35" rx="16" ry="18" fill="#ffffff" />
+              <circle cx="35" cy="36" r="8" fill="#0f172a" />
+              <circle cx="65" cy="36" r="8" fill="#0f172a" />
+              <path d="M22 68 Q50 90 78 68" stroke="#854d0e" strokeWidth="6" fill="none" strokeLinecap="round" />
+            </svg>
+            <div className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-lg bg-emerald-500 text-white font-black text-[9px] uppercase shadow">
+              FEELSGOOD
+            </div>
+          </div>
+        </div>
+
+        {/* Floating Meme Graphic: Gigachad / Cool Shades (Right) */}
+        <div className="hidden lg:flex absolute right-20 xl:right-24 top-60 pointer-events-none select-none z-0 animate-float-reverse opacity-85">
+          <div className="relative w-20 h-20 rounded-2xl bg-indigo-950/80 border-2 border-cyan-400/50 p-1.5 shadow-xl flex items-center justify-center rotate-[12deg]">
+            <svg viewBox="0 0 100 100" className="w-full h-full">
+              <polygon points="50,15 85,38 72,85 28,85 15,38" fill="#cbd5e1" />
+              <rect x="20" y="38" width="60" height="15" rx="3" fill="#0f172a" />
+              <polygon points="50,85 45,95 55,95" fill="#94a3b8" />
+              <path d="M35 70 Q50 78 65 70" stroke="#0f172a" strokeWidth="3" fill="none" />
+            </svg>
+            <div className="absolute -top-2 -left-2 px-1.5 py-0.5 rounded-lg bg-cyan-500 text-slate-950 font-black text-[9px] uppercase shadow">
+              CHAD 🗿
+            </div>
+          </div>
+        </div>
+
+        {/* Floating Ambient Emoji Matrix (Scattered Across Background) */}
+        <div className="absolute left-[8%] top-16 text-3xl opacity-75 animate-float pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">🔥</div>
+        <div className="absolute right-[8%] top-20 text-3xl opacity-75 animate-float-reverse pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">💀</div>
+        <div className="absolute left-[15%] bottom-8 text-2xl opacity-70 animate-float-wide pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">😂</div>
+        <div className="absolute right-[15%] bottom-8 text-2xl opacity-70 animate-float pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">🚀</div>
+        <div className="absolute left-[5%] top-1/2 text-2xl opacity-60 animate-float-reverse pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">🐸</div>
+        <div className="absolute right-[5%] top-1/2 text-2xl opacity-60 animate-float-wide pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">👑</div>
+        <div className="absolute left-[22%] top-8 text-xl opacity-60 animate-pulse-glow pointer-events-none select-none">✨</div>
+        <div className="absolute right-[22%] top-6 text-xl opacity-60 animate-pulse-glow pointer-events-none select-none">💯</div>
+
         {/* --- MAIN HERO CONTENT CONTAINER --- */}
         <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
           {/* Bhasad.org Presents Banner */}
@@ -240,10 +283,10 @@ export const LandingPage: React.FC = () => {
             </h1>
           </div>
 
-          {/* Subtitle */}
+          {/* Subtitle (Without the red underline line) */}
           <p className="text-sm sm:text-base md:text-lg text-slate-200 font-semibold max-w-xl mb-6 sm:mb-8 leading-relaxed">
             Your idea.{' '}
-            <span className="text-white font-extrabold underline decoration-pink-500 decoration-3">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-cyan-300 font-extrabold">
               Legendary memes in seconds.
             </span>
           </p>
