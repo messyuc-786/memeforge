@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Download,
   RotateCcw,
@@ -8,9 +8,13 @@ import {
   Sparkles,
   LayoutTemplate,
   Flame,
-  Home
+  Home,
+  Volume2,
+  VolumeX,
+  Music
 } from 'lucide-react';
 import { useMeme } from '../context/MemeContext';
+import { soundService } from '../services/soundService';
 
 interface NavbarProps {
   onGoHome?: () => void;
@@ -29,6 +33,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoHome, isLanding = false }) =
     setIsTemplatesModalOpen
   } = useMeme();
 
+  const [isMuted, setIsMuted] = useState(soundService.getIsMuted());
+
+  const handleToggleMute = () => {
+    const muted = soundService.toggleMute();
+    setIsMuted(muted);
+    if (!muted) {
+      soundService.playPop();
+    }
+  };
+
+  const handleTriggerAirhorn = () => {
+    soundService.playAirhorn();
+  };
+
+  const handleTriggerVineBoom = () => {
+    soundService.playVineBoom();
+  };
+
   return (
     <header className="sticky top-0 z-40 w-full bg-dark-900/90 backdrop-blur-md border-b border-dark-700/80 px-4 py-2.5 transition-all">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
@@ -36,7 +58,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoHome, isLanding = false }) =
         <div className="flex items-center gap-3">
           {onGoHome && !isLanding && (
             <button
-              onClick={onGoHome}
+              onClick={() => {
+                soundService.playPop();
+                onGoHome();
+              }}
               title="Return to Home"
               className="p-2 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold"
             >
@@ -46,7 +71,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoHome, isLanding = false }) =
           )}
 
           <div
-            onClick={onGoHome}
+            onClick={() => {
+              soundService.playPop();
+              if (onGoHome) onGoHome();
+            }}
             className="flex items-center gap-2 cursor-pointer group select-none"
           >
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-orange via-brand-yellow to-brand-pink p-0.5 shadow-lg shadow-brand-orange/20 group-hover:scale-105 transition-transform duration-300">
@@ -72,11 +100,41 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoHome, isLanding = false }) =
 
         {/* Action Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Quick Soundboard SFX Buttons */}
+          <div className="hidden sm:flex items-center gap-1 bg-dark-800/80 p-0.5 rounded-xl border border-dark-700">
+            <button
+              onClick={handleTriggerVineBoom}
+              title="Vine Boom Bass Drop 💥"
+              className="px-2 py-1 rounded-lg hover:bg-dark-700 text-slate-300 hover:text-brand-orange text-xs font-bold transition flex items-center gap-1"
+            >
+              <span>💥</span>
+              <span className="text-[10px] hidden lg:inline">BOOM</span>
+            </button>
+            <button
+              onClick={handleTriggerAirhorn}
+              title="MLG Airhorn 📯"
+              className="px-2 py-1 rounded-lg hover:bg-dark-700 text-slate-300 hover:text-brand-yellow text-xs font-bold transition flex items-center gap-1"
+            >
+              <span>📯</span>
+              <span className="text-[10px] hidden lg:inline">AIRHORN</span>
+            </button>
+            <button
+              onClick={handleToggleMute}
+              title={isMuted ? 'Unmute Meme SFX' : 'Mute Meme SFX'}
+              className="p-1.5 rounded-lg hover:bg-dark-700 text-slate-400 hover:text-slate-200 transition"
+            >
+              {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-brand-cyan" />}
+            </button>
+          </div>
+
           {!isLanding && (
             <>
               {/* Templates */}
               <button
-                onClick={() => setIsTemplatesModalOpen(true)}
+                onClick={() => {
+                  soundService.playPop();
+                  setIsTemplatesModalOpen(true);
+                }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-200 border border-dark-700 hover:border-brand-purple/50 text-xs font-semibold transition"
               >
                 <LayoutTemplate className="w-4 h-4 text-brand-purple" />
@@ -86,7 +144,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoHome, isLanding = false }) =
               {/* Undo / Redo */}
               <div className="flex items-center bg-dark-800 rounded-xl p-0.5 border border-dark-700">
                 <button
-                  onClick={undo}
+                  onClick={() => {
+                    soundService.playPop();
+                    undo();
+                  }}
                   disabled={!canUndo}
                   title="Undo (Ctrl+Z)"
                   className="p-1.5 rounded-lg hover:bg-dark-700 text-slate-300 disabled:opacity-30 disabled:hover:bg-transparent transition"
@@ -94,7 +155,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoHome, isLanding = false }) =
                   <RotateCcw className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={redo}
+                  onClick={() => {
+                    soundService.playPop();
+                    redo();
+                  }}
                   disabled={!canRedo}
                   title="Redo (Ctrl+Y)"
                   className="p-1.5 rounded-lg hover:bg-dark-700 text-slate-300 disabled:opacity-30 disabled:hover:bg-transparent transition"
@@ -106,6 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoHome, isLanding = false }) =
               {/* Reset */}
               <button
                 onClick={() => {
+                  soundService.playVineBoom();
                   if (window.confirm('Reset this meme canvas back to default?')) {
                     clearProject();
                   }
@@ -120,7 +185,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoHome, isLanding = false }) =
 
           {/* Settings */}
           <button
-            onClick={() => setIsSettingsModalOpen(true)}
+            onClick={() => {
+              soundService.playPop();
+              setIsSettingsModalOpen(true);
+            }}
             title="Settings & AI Keys"
             className="p-2 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-300 border border-dark-700 hover:border-slate-500 transition"
           >
@@ -130,7 +198,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoHome, isLanding = false }) =
           {/* Export / Download CTA */}
           {!isLanding && (
             <button
-              onClick={() => setIsExportModalOpen(true)}
+              onClick={() => {
+                soundService.playSparkle();
+                setIsExportModalOpen(true);
+              }}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-orange via-brand-pink to-brand-purple hover:brightness-110 text-white font-bold text-xs shadow-lg shadow-brand-orange/25 active:scale-95 transition-all"
             >
               <Download className="w-4 h-4" />

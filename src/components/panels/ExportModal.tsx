@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { useMeme } from '../../context/MemeContext';
 import { renderMemeCanvas } from '../../engine/canvasEngine';
 import { exportProjectJson } from '../../services/storageService';
+import { soundService } from '../../services/soundService';
 
 export const ExportModal: React.FC = () => {
   const { project, isExportModalOpen, setIsExportModalOpen } = useMeme();
@@ -19,10 +20,11 @@ export const ExportModal: React.FC = () => {
 
   if (!isExportModalOpen) return null;
 
-  const triggerConfetti = () => {
+  const triggerCelebration = () => {
+    soundService.playVictoryChime();
     confetti({
-      particleCount: 80,
-      spread: 70,
+      particleCount: 90,
+      spread: 75,
       origin: { y: 0.6 }
     });
   };
@@ -42,7 +44,7 @@ export const ExportModal: React.FC = () => {
     anchor.click();
     anchor.remove();
 
-    triggerConfetti();
+    triggerCelebration();
     setIsExporting(false);
   };
 
@@ -56,10 +58,9 @@ export const ExportModal: React.FC = () => {
           const item = new ClipboardItem({ 'image/png': blob });
           await navigator.clipboard.write([item]);
           setCopied(true);
-          triggerConfetti();
+          triggerCelebration();
           setTimeout(() => setCopied(false), 2500);
         } catch {
-          // Fallback
           alert('Copied link or image not supported on this browser context.');
         }
       }, 'image/png');
