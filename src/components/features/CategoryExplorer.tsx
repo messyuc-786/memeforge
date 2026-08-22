@@ -25,7 +25,12 @@ export const CategoryExplorer: React.FC = () => {
     const prompt = defaultPrompts[cat.id] || `Funny meme about ${cat.title}`;
     setActiveIdea(prompt);
     generateUniverse(prompt, 'relatable');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      const el = document.getElementById('meme-universe-results');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 150);
   };
 
   return (

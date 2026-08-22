@@ -23,6 +23,7 @@ export const DesiModeSection: React.FC = () => {
     setBottomText(preset.bottomText);
     setToolMode('meme');
     setCurrentView('studio');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (

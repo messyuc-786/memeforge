@@ -69,6 +69,12 @@ export const LandingPage: React.FC = () => {
     }
     soundService.playVineBoom();
     await generateUniverse(ideaToUse, selectedTone);
+    setTimeout(() => {
+      const el = document.getElementById('meme-universe-results');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 150);
   };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

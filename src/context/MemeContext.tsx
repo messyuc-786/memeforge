@@ -226,6 +226,11 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [savedMemes]);
 
+  // Auto-generate starter meme universe on mount
+  useEffect(() => {
+    generateUniverse('When your manager says the meeting will only take 5 minutes', 'relatable');
+  }, []);
+
   const canUndo = historyIndex > 0;
   const canRedo = historyIndex < history.length - 1;
 
@@ -284,6 +289,7 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     setToolMode('meme');
     setCurrentView('studio');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     soundService.playPop();
   };
 
