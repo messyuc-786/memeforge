@@ -13,7 +13,9 @@ import {
   TrendingUp,
   Smile,
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Lightbulb,
+  Cloud
 } from 'lucide-react';
 import { useMeme } from '../context/MemeContext';
 import { MemeTone } from '../types';
@@ -88,16 +90,84 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="w-full flex flex-col bg-slate-900 text-slate-100 overflow-x-hidden">
-      {/* 1. DYNAMIC COLORFUL HERO (Animated Aurora Mesh + Meme Doodles) */}
+      {/* 1. HERO SECTION (Bhasad.org + Floating Idea in Meme Out + Animated Idea Clouds) */}
       <section className="relative w-full pt-8 sm:pt-14 pb-14 px-3 sm:px-6 overflow-hidden bg-gradient-to-b from-[#1e1b4b] via-[#2e1065] via-[#4a044e] to-[#0f172a] bg-doodle-pattern">
-        {/* Colorful Animated Ambient Aurora Light Blobs */}
+        {/* Colorful Animated Ambient Light Blobs */}
         <div className="absolute -top-10 left-1/4 -translate-x-1/2 w-[35rem] h-[35rem] bg-gradient-to-tr from-pink-500/35 to-rose-600/30 rounded-full blur-3xl pointer-events-none animate-pulse-glow" />
         <div className="absolute top-10 right-1/4 translate-x-1/2 w-[35rem] h-[35rem] bg-gradient-to-br from-cyan-400/35 to-blue-600/30 rounded-full blur-3xl pointer-events-none animate-float" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[30rem] bg-gradient-to-r from-purple-500/25 via-amber-400/20 to-pink-500/25 rounded-full blur-3xl pointer-events-none" />
 
-        {/* --- FLOATING MEME STICKERS & DOODLES (Desktop & Tablet) --- */}
+        {/* --- ☁️ FLOATING IDEA CLOUDS IN BACKGROUND --- */}
+        {/* Idea Cloud 1: Top Left */}
+        <div className="hidden md:flex absolute left-4 lg:left-16 top-10 pointer-events-none select-none z-0 animate-cloud opacity-85">
+          <div className="px-4 py-2.5 rounded-3xl bg-white/10 backdrop-blur-md border border-white/25 shadow-xl flex items-center gap-2 text-slate-200">
+            <span className="text-xl">💡</span>
+            <div className="flex flex-col text-left">
+              <span className="text-[9px] font-black uppercase text-amber-300 tracking-wider">IDEA CLOUD</span>
+              <span className="text-xs font-bold text-white italic">"What if cats could talk?"</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Idea Cloud 2: Top Right */}
+        <div className="hidden md:flex absolute right-4 lg:right-16 top-8 pointer-events-none select-none z-0 animate-float-wide opacity-85">
+          <div className="px-4 py-2.5 rounded-3xl bg-white/10 backdrop-blur-md border border-white/25 shadow-xl flex items-center gap-2 text-slate-200">
+            <span className="text-xl">☕</span>
+            <div className="flex flex-col text-left">
+              <span className="text-[9px] font-black uppercase text-pink-300 tracking-wider">IDEA CLOUD</span>
+              <span className="text-xs font-bold text-white italic">"Monday 9:00 AM meeting vibes"</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Idea Cloud 3: Mid Left */}
+        <div className="hidden lg:flex absolute left-2 xl:left-8 top-72 pointer-events-none select-none z-0 animate-float-reverse opacity-80">
+          <div className="px-3.5 py-2 rounded-2xl bg-white/10 backdrop-blur-md border border-purple-300/30 shadow-lg flex items-center gap-2">
+            <span className="text-lg">🍕</span>
+            <span className="text-[11px] font-bold text-slate-200 italic">"Diet starts tomorrow (Day 482)"</span>
+          </div>
+        </div>
+
+        {/* Idea Cloud 4: Mid Right */}
+        <div className="hidden lg:flex absolute right-2 xl:right-8 top-72 pointer-events-none select-none z-0 animate-float opacity-80">
+          <div className="px-3.5 py-2 rounded-2xl bg-white/10 backdrop-blur-md border border-cyan-300/30 shadow-lg flex items-center gap-2">
+            <span className="text-lg">💻</span>
+            <span className="text-[11px] font-bold text-slate-200 italic">"It works on my localhost"</span>
+          </div>
+        </div>
+
+        {/* --- 💭 "IDEA IN, MEME OUT!" FLOATING BADGES ALL OVER THE ATMOSPHERE --- */}
+        {/* Floating Pill A: Top Left drifting */}
+        <div className="hidden xl:flex absolute left-28 top-44 animate-float pointer-events-none select-none z-10">
+          <span className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-xl shadow-amber-400/20 rotate-[-8deg] border-2 border-white/60">
+            💭 Idea In, Meme Out!
+          </span>
+        </div>
+
+        {/* Floating Pill B: Top Right drifting */}
+        <div className="hidden xl:flex absolute right-32 top-48 animate-float-reverse pointer-events-none select-none z-10">
+          <span className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-xs uppercase tracking-wider shadow-xl shadow-pink-500/25 rotate-[8deg] border-2 border-white/60">
+            🔥 Idea In → Viral Out!
+          </span>
+        </div>
+
+        {/* Floating Pill C: Lower Left */}
+        <div className="hidden lg:flex absolute left-14 bottom-12 animate-float-wide pointer-events-none select-none z-10">
+          <span className="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-cyan-300 font-black text-[11px] uppercase tracking-wider shadow-lg border border-cyan-400/40 rotate-[4deg]">
+            ⚡ 100% Full Bhasad Mode
+          </span>
+        </div>
+
+        {/* Floating Pill D: Lower Right */}
+        <div className="hidden lg:flex absolute right-14 bottom-12 animate-float pointer-events-none select-none z-10">
+          <span className="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-pink-300 font-black text-[11px] uppercase tracking-wider shadow-lg border border-pink-400/40 rotate-[-4deg]">
+            👑 Idea In, Meme Out!
+          </span>
+        </div>
+
+        {/* --- FLOATING MEME STICKERS --- */}
         {/* Left Floating Sticker: Doge with Pixel Shades */}
-        <div className="hidden lg:flex absolute left-4 xl:left-12 top-20 flex-col items-center gap-2 pointer-events-none select-none animate-float z-10">
+        <div className="hidden lg:flex absolute left-4 xl:left-8 top-32 flex-col items-center gap-2 pointer-events-none select-none animate-float z-10">
           <div className="relative w-28 h-28 rounded-3xl bg-slate-900/90 backdrop-blur-md p-2 shadow-2xl border-2 border-amber-400/60 rotate-[-6deg]">
             <svg viewBox="0 0 120 120" className="w-full h-full">
               <circle cx="60" cy="60" r="50" fill="#f59e0b" />
@@ -118,7 +188,7 @@ export const LandingPage: React.FC = () => {
         </div>
 
         {/* Right Floating Sticker: Polaroid Cat with Sunglasses */}
-        <div className="hidden lg:flex absolute right-4 xl:right-12 top-16 flex-col items-center gap-2 pointer-events-none select-none animate-float-reverse z-10">
+        <div className="hidden lg:flex absolute right-4 xl:right-8 top-28 flex-col items-center gap-2 pointer-events-none select-none animate-float-reverse z-10">
           <div className="relative w-32 h-36 rounded-2xl bg-white p-2 pb-6 shadow-2xl border-4 border-purple-300/80 rotate-[6deg] flex flex-col items-center">
             <div className="w-full h-24 rounded-xl bg-gradient-to-br from-purple-900 to-indigo-950 overflow-hidden flex items-center justify-center">
               <svg viewBox="0 0 100 100" className="w-20 h-20">
@@ -145,12 +215,12 @@ export const LandingPage: React.FC = () => {
 
         {/* --- MAIN HERO CONTENT CONTAINER --- */}
         <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
-          {/* Top Energetic Pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-purple-400/40 shadow-xl mb-4 text-xs font-black uppercase tracking-wider text-slate-200">
-            <span className="text-base animate-bounce-subtle">🔥</span>
-            <span>MEMEFORGE STUDIO 2026</span>
+          {/* Bhasad.org Presents Banner */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-pink-500/20 to-purple-500/20 backdrop-blur-md border border-amber-400/50 shadow-2xl mb-4 text-xs font-black uppercase tracking-wider text-amber-300 hover:scale-105 transition-transform cursor-default">
+            <span className="text-base animate-bounce-subtle">⚡</span>
+            <span>BHASAD.ORG BRINGS YOU THE BEST MEME GENERATOR</span>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-brand-orange to-brand-pink text-white shadow-sm font-black">
-              PRO CREATOR SUITE
+              2026
             </span>
           </div>
 

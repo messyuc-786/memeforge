@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
             </span>
           </div>
           <p className="text-sm font-bold text-slate-300">
-            © 2026 MemeForge — AI Meme &amp; Cartoon Studio. Turn ordinary moments into legendary memes.
+            © 2026 MemeForge by <strong>Bhasad.org</strong> — Meme &amp; Cartoon Studio. Turn ordinary moments into legendary memes.
           </p>
         </div>
 

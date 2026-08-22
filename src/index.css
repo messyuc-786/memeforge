@@ -47,7 +47,7 @@
     transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-10px) rotate(2deg);
+    transform: translateY(-12px) rotate(2deg);
   }
 }
 
@@ -56,30 +56,39 @@
     transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(8px) rotate(-2deg);
+    transform: translateY(10px) rotate(-2deg);
+  }
+}
+
+@keyframes floatWide {
+  0%, 100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  33% {
+    transform: translate(12px, -15px) rotate(3deg);
+  }
+  66% {
+    transform: translate(-10px, -8px) rotate(-2deg);
   }
 }
 
 @keyframes pulseGlow {
   0%, 100% {
-    opacity: 0.6;
+    opacity: 0.5;
     transform: scale(1);
   }
   50% {
-    opacity: 0.9;
-    transform: scale(1.05);
+    opacity: 0.85;
+    transform: scale(1.06);
   }
 }
 
-@keyframes meshShift {
-  0% {
-    background-position: 0% 50%;
+@keyframes cloudDrift {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px);
   }
   50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+    transform: translateX(18px) translateY(-8px);
   }
 }
 
@@ -91,18 +100,21 @@
   animation: floatReverse 5s ease-in-out infinite;
 }
 
+.animate-float-wide {
+  animation: floatWide 7s ease-in-out infinite;
+}
+
+.animate-cloud {
+  animation: cloudDrift 9s ease-in-out infinite;
+}
+
 .animate-pulse-glow {
   animation: pulseGlow 6s ease-in-out infinite;
 }
 
-.animate-mesh {
-  background-size: 200% 200%;
-  animation: meshShift 12s ease infinite;
-}
-
 /* Pattern Dotted Overlay */
 .bg-doodle-pattern {
-  background-image: radial-gradient(rgba(147, 51, 234, 0.15) 1.5px, transparent 1.5px), radial-gradient(rgba(236, 72, 153, 0.12) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(rgba(147, 51, 234, 0.18) 1.5px, transparent 1.5px), radial-gradient(rgba(236, 72, 153, 0.14) 1.5px, transparent 1.5px);
   background-size: 32px 32px;
   background-position: 0 0, 16px 16px;
 }
