@@ -1,216 +1,147 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Flame,
   Sparkles,
-  Download,
-  Settings,
-  RotateCcw,
-  RotateCw,
-  FolderOpen,
-  Volume2,
-  VolumeX,
-  Plus,
-  Bookmark,
-  Share2,
+  Flame,
+  LayoutTemplate,
+  Wand2,
+  TrendingUp,
+  Globe,
   Film,
   Users,
-  Camera,
-  Layers
+  Search,
+  Zap,
+  Crown
 } from 'lucide-react';
 import { useMeme } from '../context/MemeContext';
-import { AppView, MemeTone } from '../types';
+import { AppView } from '../types';
 import { soundService } from '../services/soundService';
 
-interface NavbarProps {
-  onGoHome: () => void;
-  isLanding?: boolean;
+interface NavItemConfig {
+  id: string;
+  view?: AppView;
+  label: string;
+  icon: React.ReactNode;
+  isNew?: boolean;
+  isPro?: boolean;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onGoHome }) => {
+export const Navbar: React.FC = () => {
   const {
     currentView,
     setCurrentView,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-    setIsExportModalOpen,
-    setIsSettingsModalOpen,
     setIsTemplatesModalOpen,
     setIsSavedMemesModalOpen,
-    setIsPutMeInMemeModalOpen,
-    savedMemes,
-    clearProject
+    setIsSettingsModalOpen
   } = useMeme();
 
-  const [isMuted, setIsMuted] = useState(false);
-
-  const toggleMute = () => {
-    const next = !isMuted;
-    setIsMuted(next);
-    soundService.setMuted(next);
-    if (!next) soundService.playPop();
-  };
-
-  const navTabs: { view: AppView; label: string; icon: string }[] = [
-    { view: 'home', label: 'Forge AI', icon: '🚀' },
-    { view: 'studio', label: 'Studio', icon: '🎨' },
-    { view: 'video', label: 'Video Meme', icon: '🎥' },
-    { view: 'trends', label: 'Trends', icon: '🔥' },
-    { view: 'desi', label: 'Desi Mode', icon: '🇮🇳' },
-    { view: 'community', label: 'Community', icon: '🌐' }
+  const navItems: NavItemConfig[] = [
+    { id: 'home', view: 'home', label: 'Create', icon: <Sparkles className="w-3.5 h-3.5" /> },
+    { id: 'templates', label: 'Templates', icon: <LayoutTemplate className="w-3.5 h-3.5" /> },
+    { id: 'studio', view: 'studio', label: 'AI Studio', icon: <Wand2 className="w-3.5 h-3.5" />, isNew: true },
+    { id: 'video', view: 'video', label: 'Video Meme', icon: <Film className="w-3.5 h-3.5 text-rose-400" /> },
+    { id: 'trends', view: 'trends', label: 'Trends 🔥', icon: <TrendingUp className="w-3.5 h-3.5" /> },
+    { id: 'desi', view: 'desi', label: 'Desi Mode', icon: <span className="text-xs">🇮🇳</span> },
+    { id: 'community', view: 'community', label: 'Community', icon: <Users className="w-3.5 h-3.5" /> },
+    { id: 'saved', label: 'Pro', icon: <Crown className="w-3.5 h-3.5 text-amber-400" />, isPro: true }
   ];
 
+  const handleNavClick = (item: NavItemConfig) => {
+    soundService.playPop();
+    if (item.id === 'templates') {
+      setIsTemplatesModalOpen(true);
+    } else if (item.id === 'saved') {
+      setIsSavedMemesModalOpen(true);
+    } else if (item.view) {
+      setCurrentView(item.view);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-40 w-full bg-dark-900/90 backdrop-blur-xl border-b border-dark-700/80 px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2 select-none shadow-xl">
-      {/* Left: Brand Logo & Tagline */}
-      <div className="flex items-center gap-4">
-        <button
+    <header className="sticky top-0 z-40 w-full bg-slate-950/95 backdrop-blur-md border-b border-slate-800/90 text-white shadow-xl">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+        {/* Brand Logo */}
+        <div
           onClick={() => {
             soundService.playPop();
             setCurrentView('home');
-            onGoHome();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="flex items-center gap-2 group text-left cursor-pointer"
+          className="flex items-center gap-2.5 cursor-pointer group shrink-0"
         >
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-orange via-brand-pink to-brand-purple flex items-center justify-center text-white shadow-lg shadow-brand-orange/30 group-hover:scale-105 group-hover:rotate-6 transition-all duration-300">
-            <Flame className="w-6 h-6 fill-white" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-pink flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+            <Flame className="w-5 h-5 text-white fill-white" />
           </div>
-
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <span className="text-xl font-black font-anton tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow via-brand-orange to-brand-pink leading-none">
+              <span className="font-anton text-xl tracking-wider text-white uppercase group-hover:text-brand-orange transition-colors leading-none">
                 MEMEFORGE
               </span>
-              <span className="text-[10px] font-black uppercase px-1.5 py-0.5 rounded-full bg-brand-pink/20 text-brand-pink border border-brand-pink/40">
-                AI 2026
+              <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-brand-pink/20 text-brand-pink border border-brand-pink/30">
+                2026
               </span>
             </div>
-            <span className="text-[10px] font-bold text-slate-400 hidden sm:inline leading-none mt-0.5">
-              IDEA IN. MEME OUT. 🔥
+            <span className="text-[10px] text-slate-400 font-bold tracking-widest hidden sm:inline">
+              IDEA IN. MEME OUT.
             </span>
           </div>
-        </button>
+        </div>
 
-        {/* Center Desktop Navigation Tabs */}
-        <nav className="hidden lg:flex items-center gap-1 bg-dark-950/70 p-1 rounded-2xl border border-dark-800">
-          {navTabs.map((tab) => {
-            const isActive = currentView === tab.view;
+        {/* Navigation Items (Desktop) */}
+        <nav className="hidden lg:flex items-center gap-1">
+          {navItems.map((item) => {
+            const isActive = item.view === currentView;
             return (
               <button
-                key={tab.view}
-                onClick={() => {
-                  soundService.playPop();
-                  setCurrentView(tab.view);
-                }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 ${
+                key={item.id}
+                onClick={() => handleNavClick(item)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                   isActive
-                    ? 'bg-gradient-to-r from-brand-orange to-brand-pink text-white shadow-md'
-                    : 'text-slate-400 hover:text-white hover:bg-dark-850'
+                    ? 'bg-white/15 text-white shadow-sm'
+                    : 'text-slate-300 hover:text-white hover:bg-white/10'
                 }`}
               >
-                <span>{tab.icon}</span>
-                <span>{tab.label}</span>
+                {item.icon}
+                <span>{item.label}</span>
+                {item.isNew && (
+                  <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-pink-500 text-white leading-tight">
+                    NEW
+                  </span>
+                )}
+                {item.isPro && (
+                  <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 leading-tight">
+                    PRO
+                  </span>
+                )}
               </button>
             );
           })}
-
-          <button
-            onClick={() => setIsPutMeInMemeModalOpen(true)}
-            className="px-3 py-1.5 rounded-xl text-xs font-black text-brand-pink hover:text-white hover:bg-brand-pink/20 transition flex items-center gap-1.5"
-          >
-            <span>🤳</span>
-            <span>Put Me In Meme</span>
-          </button>
         </nav>
-      </div>
 
-      {/* Right Controls & Quick Actions */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        {/* Undo / Redo (Active in Studio Mode) */}
-        {currentView === 'studio' && (
-          <div className="hidden sm:flex items-center gap-1 bg-dark-950/60 p-1 rounded-2xl border border-dark-800">
-            <button
-              onClick={undo}
-              disabled={!canUndo}
-              title="Undo (Ctrl+Z)"
-              className="p-1.5 rounded-xl hover:bg-dark-800 disabled:opacity-30 disabled:hover:bg-transparent text-slate-300 transition"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
-            <button
-              onClick={redo}
-              disabled={!canRedo}
-              title="Redo (Ctrl+Y)"
-              className="p-1.5 rounded-xl hover:bg-dark-800 disabled:opacity-30 disabled:hover:bg-transparent text-slate-300 transition"
-            >
-              <RotateCw className="w-4 h-4" />
-            </button>
+        {/* Right Search & Action */}
+        <div className="flex items-center gap-2.5">
+          {/* Quick Search */}
+          <div
+            onClick={() => setIsTemplatesModalOpen(true)}
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 text-xs cursor-pointer hover:border-slate-700 transition"
+          >
+            <Search className="w-3.5 h-3.5" />
+            <span>Search memes...</span>
+            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] text-slate-400 font-mono">⌘K</kbd>
           </div>
-        )}
 
-        {/* Funky Meme Soundboard Fast Triggers */}
-        <div className="flex items-center gap-1 bg-dark-950/60 p-1 rounded-2xl border border-dark-800">
-          <button
-            onClick={() => soundService.playVineBoom()}
-            title="💥 Vine Boom Bass Drop"
-            className="px-2 py-1 rounded-xl bg-dark-800 hover:bg-dark-700 text-xs font-bold text-slate-200 transition hover:scale-105 active:scale-95"
-          >
-            💥 Boom
-          </button>
-          <button
-            onClick={() => soundService.playAirhorn()}
-            title="📯 MLG Airhorn"
-            className="px-2 py-1 rounded-xl bg-dark-800 hover:bg-dark-700 text-xs font-bold text-slate-200 transition hover:scale-105 active:scale-95"
-          >
-            📯 Horn
-          </button>
-          <button
-            onClick={toggleMute}
-            title={isMuted ? 'Unmute Meme SFX' : 'Mute Meme SFX'}
-            className="p-1.5 rounded-xl hover:bg-dark-800 text-slate-400 hover:text-white transition"
-          >
-            {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-brand-cyan" />}
-          </button>
-        </div>
-
-        {/* Saved Memes Vault Trigger */}
-        <button
-          onClick={() => setIsSavedMemesModalOpen(true)}
-          title="Saved Memes Vault"
-          className="p-2 rounded-2xl bg-dark-950/60 hover:bg-dark-800 border border-dark-800 text-slate-300 hover:text-brand-yellow transition relative"
-        >
-          <Bookmark className="w-4 h-4" />
-          {savedMemes.length > 0 && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-brand-yellow text-slate-950 text-[9px] font-black flex items-center justify-center shadow">
-              {savedMemes.length}
-            </span>
-          )}
-        </button>
-
-        {/* Settings Modal Trigger */}
-        <button
-          onClick={() => setIsSettingsModalOpen(true)}
-          title="Settings & API Key"
-          className="p-2 rounded-2xl bg-dark-950/60 hover:bg-dark-800 border border-dark-800 text-slate-300 hover:text-white transition"
-        >
-          <Settings className="w-4 h-4" />
-        </button>
-
-        {/* Primary Export CTA */}
-        {currentView === 'studio' && (
           <button
             onClick={() => {
-              soundService.playVictoryChime();
-              setIsExportModalOpen(true);
+              soundService.playSparkle();
+              setCurrentView('home');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="px-3 sm:px-4 py-2 rounded-2xl bg-gradient-to-r from-brand-yellow via-brand-orange to-brand-pink text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-brand-orange/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 border border-white/20"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-orange via-brand-pink to-brand-purple hover:brightness-110 text-white font-black text-xs uppercase tracking-wider transition shadow-lg shadow-brand-orange/20 active:scale-95 flex items-center gap-1.5"
           >
-            <Download className="w-4 h-4 stroke-[3]" />
-            <span className="hidden sm:inline">Export HD</span>
-            <span className="sm:hidden">Save</span>
+            <Zap className="w-3.5 h-3.5" />
+            <span>Create Meme</span>
           </button>
-        )}
+        </div>
       </div>
     </header>
   );

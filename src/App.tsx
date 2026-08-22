@@ -23,24 +23,13 @@ export const App: React.FC = () => {
   const {
     currentView,
     setCurrentView,
-    setToolMode,
     undo,
     redo,
     selectedElementId,
     removeElement,
     setSelectedElementId,
-    setIsSavedMemesModalOpen,
-    setIsPutMeInMemeModalOpen
+    setIsSavedMemesModalOpen
   } = useMeme();
-
-  const handleStartStudio = (mode = 'meme') => {
-    setToolMode(mode as any);
-    setCurrentView('studio');
-  };
-
-  const handleGoHome = () => {
-    setCurrentView('home');
-  };
 
   // Global Keyboard Shortcuts
   useEffect(() => {
@@ -76,7 +65,7 @@ export const App: React.FC = () => {
   const renderCurrentView = () => {
     switch (currentView) {
       case 'home':
-        return <LandingPage onStart={handleStartStudio} />;
+        return <LandingPage />;
       case 'studio':
         return (
           <main className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
@@ -93,40 +82,40 @@ export const App: React.FC = () => {
         );
       case 'trends':
         return (
-          <div className="flex-1 flex flex-col justify-between pt-6">
+          <div className="flex-1 flex flex-col justify-between pt-6 bg-[#faf8fc]">
             <TrendsSection />
             <Footer />
           </div>
         );
       case 'desi':
         return (
-          <div className="flex-1 flex flex-col justify-between pt-6">
+          <div className="flex-1 flex flex-col justify-between pt-6 bg-[#faf8fc]">
             <DesiModeSection />
             <Footer />
           </div>
         );
       case 'community':
         return (
-          <div className="flex-1 flex flex-col justify-between pt-6">
+          <div className="flex-1 flex flex-col justify-between pt-6 bg-slate-950 text-white">
             <CommunitySection />
             <Footer />
           </div>
         );
       default:
-        return <LandingPage onStart={handleStartStudio} />;
+        return <LandingPage />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col font-sans selection:bg-brand-orange selection:text-white pb-16 lg:pb-0">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-brand-orange selection:text-white pb-16 lg:pb-0">
       {/* Top Navbar */}
-      <Navbar onGoHome={handleGoHome} isLanding={currentView === 'home'} />
+      <Navbar />
 
       {/* Main Viewport */}
       {renderCurrentView()}
 
       {/* Mobile Bottom Navigation Dock (Phone Experience) */}
-      <nav className="fixed bottom-0 inset-x-0 z-40 lg:hidden bg-dark-900/95 backdrop-blur-xl border-t border-dark-800 px-3 py-2 flex items-center justify-around text-xs shadow-2xl">
+      <nav className="fixed bottom-0 inset-x-0 z-40 lg:hidden bg-slate-950/95 backdrop-blur-xl border-t border-slate-800 px-3 py-2 flex items-center justify-around text-xs shadow-2xl">
         <button
           onClick={() => {
             soundService.playPop();
