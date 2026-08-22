@@ -203,7 +203,7 @@ export const ContentUniverseSection: React.FC = () => {
               <span className="text-2xl">🎥</span>
               <div>
                 <span className="text-sm font-black uppercase text-slate-100 block">Short-Form Video Script</span>
-                <span className="text-[10px] text-brand-pink font-bold">9:16 Reels, TikTok &amp; Shorts</span>
+                <span className="text-[10px] text-brand-pink font-bold">9:16 YouTube Shorts, Instagram Reels &amp; Facebook</span>
               </div>
             </div>
             <button

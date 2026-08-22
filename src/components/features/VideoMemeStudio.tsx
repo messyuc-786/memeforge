@@ -130,7 +130,7 @@ export const VideoMemeStudio: React.FC = () => {
             <h1 className="text-2xl font-black font-anton uppercase tracking-wide text-slate-100 flex items-center gap-2">
               <span>VIDEO MEME STUDIO</span>
               <span className="text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-brand-orange text-white">
-                9:16 REELS &amp; TIKTOK
+                9:16 YOUTUBE SHORTS &amp; INSTAGRAM REELS
               </span>
             </h1>
             <p className="text-xs text-slate-400">Trim, caption, hook, and forge viral short-form video memes</p>

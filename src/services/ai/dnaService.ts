@@ -30,13 +30,13 @@ export function generateMemeDNA(idea: string, tone: MemeTone): MemeDNA {
   const audiences: Record<MemeTone, string> = {
     relatable: 'Mainstream / Everyone',
     savage: 'Twitter / Reddit Memers',
-    unhinged: 'TikTok / Discord Shitposters',
+    unhinged: 'YouTube Shorts / Discord Meme Servers',
     clever: 'Tech / Tech Twitter & LinkedIn',
-    wholesome: 'Instagram / Friends & Family',
-    desi: 'Desi Twitter / Indian WhatsApp',
+    wholesome: 'Instagram & Facebook / Family & Friends',
+    desi: 'Desi Twitter / Indian WhatsApp & Facebook',
     absurd: 'Dank Meme Communities',
     corporate: 'Corporate LinkedIn / Slack',
-    genz: 'Gen-Z / Reels & TikTok'
+    genz: 'Gen-Z / YouTube Shorts & Reels'
   };
 
   return {
@@ -71,7 +71,7 @@ export function generateCreativeScore(idea: string, tone: MemeTone): CreativeSco
   else ratingLabel = 'Solid Meme';
 
   const suggestions: string[] = [
-    'Try the 9:16 vertical crop format for 3x engagement on Instagram Reels and TikTok.',
+    'Try the 9:16 vertical crop format for 3x engagement on YouTube Shorts, Instagram Reels, and Facebook.',
     'Keep the bottom punchline under 8 words to sharpen the comedic comedic delivery.',
     tone !== 'savage' 
       ? 'Remix in Savage Mode to increase comment section debate and repost velocity.'

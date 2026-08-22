@@ -109,7 +109,7 @@ export async function generateContentUniverse(idea: string, userTone: MemeTone =
       templateTitle: tpl5.title,
       templatePreviewUrl: tpl5.previewUrl,
       aspectRatio: tpl5.aspectRatio,
-      platformTarget: 'Reels / TikTok',
+      platformTarget: 'YouTube Shorts',
       dna: generateMemeDNA(cleanIdea, 'absurd'),
       creativeScore: generateCreativeScore(cleanIdea, 'absurd')
     };

@@ -203,7 +203,7 @@ export interface GeneratedMemeConcept {
   templateTitle: string;
   templatePreviewUrl: string;
   aspectRatio: AspectRatioType;
-  platformTarget: 'Instagram' | 'X / Twitter' | 'Reels / TikTok' | 'WhatsApp' | 'Reddit' | 'Universal';
+  platformTarget: 'Instagram' | 'YouTube Shorts' | 'Facebook' | 'X / Twitter' | 'WhatsApp' | 'Reddit' | 'Universal';
   dna: MemeDNA;
   creativeScore: CreativeScore;
   isDesi?: boolean;

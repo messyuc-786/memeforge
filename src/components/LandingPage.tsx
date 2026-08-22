@@ -284,12 +284,36 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Subtitle (Without the red underline line) */}
-          <p className="text-sm sm:text-base md:text-lg text-slate-200 font-semibold max-w-xl mb-6 sm:mb-8 leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg text-slate-200 font-semibold max-w-xl mb-4 sm:mb-5 leading-relaxed">
             Your idea.{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-cyan-300 font-extrabold">
               Legendary memes in seconds.
             </span>
           </p>
+
+          {/* Attention-Seeking Fun Social Platform Marquee Pill */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-6 sm:mb-8 select-none">
+            <span className="px-3 py-1 rounded-full bg-red-600/30 border border-red-500/50 text-red-300 text-[11px] font-black uppercase flex items-center gap-1 shadow-md animate-pulse">
+              <span>▶️</span> YouTube Shorts
+            </span>
+            <span className="px-3 py-1 rounded-full bg-pink-600/30 border border-pink-500/50 text-pink-300 text-[11px] font-black uppercase flex items-center gap-1 shadow-md">
+              <span>📸</span> Instagram Reels
+            </span>
+            <span className="px-3 py-1 rounded-full bg-blue-600/30 border border-blue-500/50 text-blue-300 text-[11px] font-black uppercase flex items-center gap-1 shadow-md">
+              <span>👥</span> Facebook Feed
+            </span>
+            <span className="px-3 py-1 rounded-full bg-emerald-600/30 border border-emerald-500/50 text-emerald-300 text-[11px] font-black uppercase flex items-center gap-1 shadow-md">
+              <span>💬</span> WhatsApp Status
+            </span>
+            <button
+              onClick={() => {
+                soundService.playAirhorn();
+              }}
+              className="px-3 py-1 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 text-[11px] font-black uppercase flex items-center gap-1 shadow-lg active:scale-95 transition-all"
+            >
+              <span>📢</span> AIRHORN!
+            </button>
+          </div>
 
           {/* --- FROSTED GENERATOR CONSOLE CARD --- */}
           <div className="w-full rounded-3xl bg-white/95 backdrop-blur-xl shadow-[0_20px_70px_rgba(0,0,0,0.5)] border-2 border-purple-200/90 p-4 sm:p-7 flex flex-col gap-4 text-left transition-all text-slate-900">

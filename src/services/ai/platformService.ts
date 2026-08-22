@@ -13,24 +13,34 @@ export interface PlatformPresetInfo {
 
 export const PLATFORM_PRESETS: PlatformPresetInfo[] = [
   {
-    name: 'Instagram Reels / TikTok',
-    icon: '📱',
+    name: 'YouTube Shorts',
+    icon: '▶️',
     recommendedRatio: '9:16',
     dimensions: { width: 1080, height: 1920 },
-    safeZoneNote: 'Keep meme text within central 80% to avoid being blocked by profile icons and caption buttons.',
-    captionLengthTip: '1-2 snappy lines + 3 targeted niche hashtags.',
+    safeZoneNote: 'Keep meme text in upper 75% so YouTube title and like buttons do not obscure the punchline.',
+    captionLengthTip: 'High-contrast hook title that stops the infinite scroll.',
     maxFileSize: '50 MB',
-    popularHashtags: ['#reels', '#viralmemes', '#relatable', '#fyp', '#comedy']
+    popularHashtags: ['#Shorts', '#MemeShorts', '#Viral', '#YouTubeMemes', '#Funny']
   },
   {
-    name: 'Instagram Feed Post',
+    name: 'Instagram Reels & Posts',
     icon: '📸',
+    recommendedRatio: '9:16',
+    dimensions: { width: 1080, height: 1920 },
+    safeZoneNote: 'Keep meme text within central 80% to avoid bottom caption buttons.',
+    captionLengthTip: '1-2 snappy lines + 3 targeted viral hashtags.',
+    maxFileSize: '50 MB',
+    popularHashtags: ['#reels', '#viralmemes', '#relatable', '#memestagram', '#comedy']
+  },
+  {
+    name: 'Facebook Feed & Groups',
+    icon: '👥',
     recommendedRatio: '1:1',
     dimensions: { width: 1080, height: 1080 },
-    safeZoneNote: 'Classic square format with maximum thumbnail feed visibility.',
-    captionLengthTip: 'Ask an interactive question to drive comment section debates.',
-    maxFileSize: '15 MB',
-    popularHashtags: ['#memesdaily', '#dankmemes', '#memestagram', '#funnyposts']
+    safeZoneNote: 'Square format maximizes organic reach in group shares and newsfeeds.',
+    captionLengthTip: 'Relatable question that triggers comments and shares with friends.',
+    maxFileSize: '25 MB',
+    popularHashtags: ['#FacebookMemes', '#TrendingMemes', '#RelatablePost', '#Humor']
   },
   {
     name: 'X / Twitter',
