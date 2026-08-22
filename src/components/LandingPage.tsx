@@ -15,7 +15,11 @@ import {
   ShieldCheck,
   CheckCircle2,
   Lightbulb,
-  Cloud
+  Image as ImageIcon,
+  Mic,
+  Link,
+  UserCheck,
+  Dna
 } from 'lucide-react';
 import { useMeme } from '../context/MemeContext';
 import { MemeTone } from '../types';
@@ -49,7 +53,8 @@ export const LandingPage: React.FC = () => {
     setBackgroundImage,
     setToolMode,
     setIsPutMeInMemeModalOpen,
-    setIsTemplatesModalOpen
+    setIsTemplatesModalOpen,
+    setSelectedDNAConcept
   } = useMeme();
 
   const [selectedTone, setSelectedTone] = useState<MemeTone>('relatable');
@@ -95,242 +100,210 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex flex-col bg-slate-900 text-slate-100 overflow-x-hidden">
-      {/* 1. HERO SECTION (Bhasad.org + Floating Idea in Meme Out + Animated Idea Clouds) */}
-      <section className="relative w-full pt-8 sm:pt-14 pb-14 px-3 sm:px-6 overflow-hidden bg-gradient-to-b from-[#1e1b4b] via-[#2e1065] via-[#4a044e] to-[#0f172a] bg-doodle-pattern">
-        {/* Colorful Animated Ambient Light Blobs */}
-        <div className="absolute -top-10 left-1/4 -translate-x-1/2 w-[35rem] h-[35rem] bg-gradient-to-tr from-pink-500/35 to-rose-600/30 rounded-full blur-3xl pointer-events-none animate-pulse-glow" />
-        <div className="absolute top-10 right-1/4 translate-x-1/2 w-[35rem] h-[35rem] bg-gradient-to-br from-cyan-400/35 to-blue-600/30 rounded-full blur-3xl pointer-events-none animate-float" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[30rem] bg-gradient-to-r from-purple-500/25 via-amber-400/20 to-pink-500/25 rounded-full blur-3xl pointer-events-none" />
+    <div className="w-full flex flex-col bg-[#fdfcff] text-slate-900 overflow-x-hidden">
+      {/* 1. HERO SECTION (Light, Colorful, Playful 2026 Reference Target) */}
+      <section className="relative w-full pt-8 sm:pt-12 pb-16 px-3 sm:px-6 overflow-hidden bg-gradient-to-b from-[#f3e8ff] via-[#ffffff] via-[#fce7f3] to-[#e0f2fe]">
+        {/* Subtle Decorative Grid Pattern */}
+        <div className="absolute inset-0 bg-doodle-pattern opacity-60 pointer-events-none" />
 
-        {/* --- ☁️ FLOATING IDEA CLOUDS IN BACKGROUND --- */}
-        {/* Idea Cloud 1: Top Left */}
-        <div className="hidden md:flex absolute left-4 lg:left-16 top-10 pointer-events-none select-none z-0 animate-cloud opacity-85">
-          <div className="px-4 py-2.5 rounded-3xl bg-white/10 backdrop-blur-md border border-white/25 shadow-xl flex items-center gap-2 text-slate-200">
-            <span className="text-xl">💡</span>
-            <div className="flex flex-col text-left">
-              <span className="text-[9px] font-black uppercase text-amber-300 tracking-wider">IDEA CLOUD</span>
-              <span className="text-xs font-bold text-white italic">"What if cats could talk?"</span>
-            </div>
-          </div>
-        </div>
+        {/* Ambient Color Blobs */}
+        <div className="absolute -top-10 left-1/4 -translate-x-1/2 w-[35rem] h-[35rem] bg-gradient-to-tr from-pink-400/20 to-purple-400/20 rounded-full blur-3xl pointer-events-none animate-pulse-glow" />
+        <div className="absolute top-10 right-1/4 translate-x-1/2 w-[35rem] h-[35rem] bg-gradient-to-br from-cyan-300/20 to-blue-400/20 rounded-full blur-3xl pointer-events-none animate-float" />
 
-        {/* Idea Cloud 2: Top Right */}
-        <div className="hidden md:flex absolute right-4 lg:right-16 top-8 pointer-events-none select-none z-0 animate-float-wide opacity-85">
-          <div className="px-4 py-2.5 rounded-3xl bg-white/10 backdrop-blur-md border border-white/25 shadow-xl flex items-center gap-2 text-slate-200">
-            <span className="text-xl">☕</span>
-            <div className="flex flex-col text-left">
-              <span className="text-[9px] font-black uppercase text-pink-300 tracking-wider">IDEA CLOUD</span>
-              <span className="text-xs font-bold text-white italic">"Monday 9:00 AM meeting vibes"</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Idea Cloud 3: Mid Left */}
-        <div className="hidden lg:flex absolute left-2 xl:left-8 top-72 pointer-events-none select-none z-0 animate-float-reverse opacity-80">
-          <div className="px-3.5 py-2 rounded-2xl bg-white/10 backdrop-blur-md border border-purple-300/30 shadow-lg flex items-center gap-2">
-            <span className="text-lg">🍕</span>
-            <span className="text-[11px] font-bold text-slate-200 italic">"Diet starts tomorrow (Day 482)"</span>
-          </div>
-        </div>
-
-        {/* Idea Cloud 4: Mid Right */}
-        <div className="hidden lg:flex absolute right-2 xl:right-8 top-72 pointer-events-none select-none z-0 animate-float opacity-80">
-          <div className="px-3.5 py-2 rounded-2xl bg-white/10 backdrop-blur-md border border-cyan-300/30 shadow-lg flex items-center gap-2">
-            <span className="text-lg">💻</span>
-            <span className="text-[11px] font-bold text-slate-200 italic">"It works on my localhost"</span>
-          </div>
-        </div>
-
-        {/* --- 💭 "IDEA IN, MEME OUT!" FLOATING BADGES ALL OVER THE ATMOSPHERE --- */}
-        {/* Floating Pill A: Top Left drifting */}
-        <div className="hidden xl:flex absolute left-28 top-44 animate-float pointer-events-none select-none z-10">
-          <span className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-xl shadow-amber-400/20 rotate-[-8deg] border-2 border-white/60">
-            💭 Idea In, Meme Out!
-          </span>
-        </div>
-
-        {/* Floating Pill B: Top Right drifting */}
-        <div className="hidden xl:flex absolute right-32 top-48 animate-float-reverse pointer-events-none select-none z-10">
-          <span className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-xs uppercase tracking-wider shadow-xl shadow-pink-500/25 rotate-[8deg] border-2 border-white/60">
-            🔥 Idea In → Viral Out!
-          </span>
-        </div>
-
-        {/* Floating Pill C: Lower Left */}
-        <div className="hidden lg:flex absolute left-14 bottom-12 animate-float-wide pointer-events-none select-none z-10">
-          <span className="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-cyan-300 font-black text-[11px] uppercase tracking-wider shadow-lg border border-cyan-400/40 rotate-[4deg]">
-            ⚡ 100% Full Bhasad Mode
-          </span>
-        </div>
-
-        {/* Floating Pill D: Lower Right */}
-        <div className="hidden lg:flex absolute right-14 bottom-12 animate-float pointer-events-none select-none z-10">
-          <span className="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-pink-300 font-black text-[11px] uppercase tracking-wider shadow-lg border border-pink-400/40 rotate-[-4deg]">
-            👑 Idea In, Meme Out!
-          </span>
-        </div>
-
-        {/* --- FLOATING MEME STICKERS --- */}
-        {/* Left Floating Sticker: Doge with Pixel Shades */}
-        <div className="hidden lg:flex absolute left-4 xl:left-8 top-32 flex-col items-center gap-2 pointer-events-none select-none animate-float z-10">
-          <div className="relative w-28 h-28 rounded-3xl bg-slate-900/90 backdrop-blur-md p-2 shadow-2xl border-2 border-amber-400/60 rotate-[-6deg]">
+        {/* --- LEFT FLOATING DECORATIONS: DOGE WITH SUNGLASSES & SAVAGE STICKER --- */}
+        <div className="hidden xl:flex absolute left-4 2xl:left-12 top-16 flex-col items-center gap-2 pointer-events-none select-none animate-float z-10">
+          <div className="relative w-36 h-36 rounded-3xl bg-white p-2 shadow-2xl border-4 border-amber-300 rotate-[-8deg] flex items-center justify-center">
             <svg viewBox="0 0 120 120" className="w-full h-full">
               <circle cx="60" cy="60" r="50" fill="#f59e0b" />
-              <polygon points="30,30 40,5 55,25" fill="#d97706" />
-              <polygon points="90,30 80,5 65,25" fill="#d97706" />
-              <rect x="25" y="45" width="70" height="18" rx="3" fill="#0f172a" />
-              <rect x="35" y="48" width="6" height="4" fill="#ffffff" />
-              <rect x="75" y="48" width="6" height="4" fill="#ffffff" />
-              <path d="M45 75 Q60 90 75 75" stroke="#0f172a" strokeWidth="4" fill="none" />
+              <polygon points="25,35 35,8 55,25" fill="#d97706" />
+              <polygon points="95,35 85,8 65,25" fill="#d97706" />
+              <rect x="20" y="44" width="80" height="20" rx="4" fill="#0f172a" />
+              <rect x="30" y="48" width="8" height="5" fill="#ffffff" />
+              <rect x="78" y="48" width="8" height="5" fill="#ffffff" />
+              <ellipse cx="60" cy="72" rx="14" ry="10" fill="#ffffff" />
+              <ellipse cx="60" cy="69" rx="7" ry="5" fill="#0f172a" />
+              <path d="M52 82 Q60 92 68 82" stroke="#0f172a" strokeWidth="3" fill="none" />
             </svg>
-            <div className="absolute -bottom-3 -right-3 px-2.5 py-1 rounded-xl bg-rose-500 text-white font-black text-[10px] uppercase shadow-xl rotate-12 border border-rose-300">
+            <div className="absolute -bottom-4 -right-4 px-3 py-1 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black text-xs uppercase shadow-xl rotate-12 border-2 border-white">
               SAVAGE! 🔥
             </div>
           </div>
-          <span className="text-[11px] font-black text-amber-300 bg-slate-950/80 px-2.5 py-0.5 rounded-full border border-amber-400/40 shadow-lg">
-            doge.exe
-          </span>
         </div>
 
-        {/* Right Floating Sticker: Polaroid Cat with Sunglasses */}
-        <div className="hidden lg:flex absolute right-4 xl:right-8 top-28 flex-col items-center gap-2 pointer-events-none select-none animate-float-reverse z-10">
-          <div className="relative w-32 h-36 rounded-2xl bg-white p-2 pb-6 shadow-2xl border-4 border-purple-300/80 rotate-[6deg] flex flex-col items-center">
-            <div className="w-full h-24 rounded-xl bg-gradient-to-br from-purple-900 to-indigo-950 overflow-hidden flex items-center justify-center">
-              <svg viewBox="0 0 100 100" className="w-20 h-20">
-                <circle cx="50" cy="50" r="38" fill="#f97316" />
-                <polygon points="25,30 20,5 40,22" fill="#ea580c" />
-                <polygon points="75,30 80,5 60,22" fill="#ea580c" />
-                <circle cx="38" cy="48" r="12" fill="#0f172a" />
-                <circle cx="62" cy="48" r="12" fill="#0f172a" />
-                <line x1="48" y1="48" x2="52" y2="48" stroke="#0f172a" strokeWidth="3" />
-                <path d="M42 66 Q50 74 58 66" stroke="#0f172a" strokeWidth="3" fill="none" />
+        {/* --- RIGHT FLOATING DECORATIONS: POLAROID CAT + GREEK STATUE + FLOATING MEME DNA SCORE --- */}
+        <div className="hidden xl:flex absolute right-4 2xl:right-12 top-12 flex-col items-end gap-3 pointer-events-none select-none z-10">
+          <div className="flex items-start gap-3">
+            {/* Polaroid Cat */}
+            <div className="relative w-28 h-32 rounded-2xl bg-white p-2 pb-5 shadow-2xl border-2 border-purple-200 rotate-[8deg] flex flex-col items-center animate-float-reverse">
+              <div className="w-full h-20 rounded-xl bg-gradient-to-br from-purple-900 to-indigo-950 overflow-hidden flex items-center justify-center">
+                <svg viewBox="0 0 100 100" className="w-16 h-16">
+                  <circle cx="50" cy="50" r="38" fill="#f97316" />
+                  <polygon points="25,30 20,5 40,22" fill="#ea580c" />
+                  <polygon points="75,30 80,5 60,22" fill="#ea580c" />
+                  <circle cx="38" cy="48" r="12" fill="#0f172a" />
+                  <circle cx="62" cy="48" r="12" fill="#0f172a" />
+                  <line x1="48" y1="48" x2="52" y2="48" stroke="#0f172a" strokeWidth="3" />
+                  <path d="M42 66 Q50 74 58 66" stroke="#0f172a" strokeWidth="3" fill="none" />
+                </svg>
+              </div>
+              <span className="text-[9px] font-black text-slate-800 mt-1 uppercase tracking-wider">
+                LEGENDARY! 👑
+              </span>
+            </div>
+
+            {/* Greek Statue with Sunglasses & Bubblegum */}
+            <div className="relative w-28 h-36 rounded-3xl bg-gradient-to-b from-purple-100 to-pink-100 p-2 shadow-2xl border-2 border-pink-300 rotate-[-6deg] flex items-center justify-center overflow-hidden animate-float">
+              <svg viewBox="0 0 100 120" className="w-full h-full">
+                {/* Statue head shape */}
+                <path d="M30 30 Q50 10 70 30 Q80 60 70 90 Q50 110 30 90 Q20 60 30 30 Z" fill="#cbd5e1" />
+                {/* Curly hair */}
+                <circle cx="35" cy="25" r="12" fill="#94a3b8" />
+                <circle cx="50" cy="18" r="14" fill="#94a3b8" />
+                <circle cx="65" cy="25" r="12" fill="#94a3b8" />
+                {/* Pixel Sunglasses */}
+                <rect x="25" y="45" width="50" height="12" fill="#0f172a" rx="2" />
+                <rect x="30" y="47" width="5" height="3" fill="#ffffff" />
+                <rect x="60" y="47" width="5" height="3" fill="#ffffff" />
+                {/* Nose */}
+                <line x1="50" y1="55" x2="48" y2="72" stroke="#94a3b8" strokeWidth="3" />
+                {/* Pink Bubblegum sphere */}
+                <circle cx="50" cy="82" r="16" fill="#ec4899" />
+                <circle cx="45" cy="77" r="4" fill="#fbcfe8" />
               </svg>
             </div>
-            <span className="text-[10px] font-black text-slate-900 mt-1.5 uppercase tracking-wider">
-              LEGENDARY! 👑
-            </span>
           </div>
-          <div className="flex items-center gap-1">
-            <span className="text-base">✨</span>
-            <span className="text-xs font-black text-cyan-300 bg-slate-950/80 px-2.5 py-0.5 rounded-full border border-cyan-400/40">
-              #Viral2026
-            </span>
-          </div>
-        </div>
 
-        {/* --- ADDITIONAL BACKGROUND FLOATING MEMES & EMOJIS --- */}
-        {/* Floating Meme Graphic: Pepe Frog (Left) */}
-        <div className="hidden lg:flex absolute left-20 xl:left-24 top-60 pointer-events-none select-none z-0 animate-float-wide opacity-85">
-          <div className="relative w-20 h-20 rounded-2xl bg-emerald-950/80 border-2 border-emerald-400/50 p-1.5 shadow-xl flex items-center justify-center rotate-[-12deg]">
-            <svg viewBox="0 0 100 100" className="w-full h-full">
-              <ellipse cx="50" cy="55" rx="42" ry="36" fill="#22c55e" />
-              <ellipse cx="32" cy="35" rx="16" ry="18" fill="#ffffff" />
-              <ellipse cx="68" cy="35" rx="16" ry="18" fill="#ffffff" />
-              <circle cx="35" cy="36" r="8" fill="#0f172a" />
-              <circle cx="65" cy="36" r="8" fill="#0f172a" />
-              <path d="M22 68 Q50 90 78 68" stroke="#854d0e" strokeWidth="6" fill="none" strokeLinecap="round" />
-            </svg>
-            <div className="absolute -top-2 -right-2 px-1.5 py-0.5 rounded-lg bg-emerald-500 text-white font-black text-[9px] uppercase shadow">
-              FEELSGOOD
+          {/* Floating Reference MEME DNA Card */}
+          <div className="w-64 rounded-2xl bg-slate-950/95 text-white p-3.5 shadow-2xl border-2 border-purple-500/40 backdrop-blur-md animate-float-reverse">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <Dna className="w-3.5 h-3.5 text-pink-400" />
+                <span className="text-xs font-black uppercase tracking-wider text-slate-100">MEME DNA</span>
+              </div>
+              <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-purple-500 text-white">
+                AI
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-1.5 text-[11px] font-bold text-slate-300">
+              <div className="flex items-center justify-between">
+                <span>😂 Humor</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-20 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="w-[92%] h-full bg-pink-500 rounded-full" />
+                  </div>
+                  <span className="text-[10px] text-slate-200">92%</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span>🎯 Relatability</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-20 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="w-[88%] h-full bg-purple-400 rounded-full" />
+                  </div>
+                  <span className="text-[10px] text-slate-200">88%</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span>😈 Sarcasm</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-20 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="w-[91%] h-full bg-rose-500 rounded-full" />
+                  </div>
+                  <span className="text-[10px] text-slate-200">91%</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span>🧠 Cleverness</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-20 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="w-[81%] h-full bg-cyan-400 rounded-full" />
+                  </div>
+                  <span className="text-[10px] text-slate-200">81%</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span>🇮🇳 Desi Factor</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-20 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="w-[72%] h-full bg-amber-400 rounded-full" />
+                  </div>
+                  <span className="text-[10px] text-slate-200">72%</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-0.5">
+                <span>📱 Reel Ready</span>
+                <span className="text-[10px] font-black text-emerald-400 bg-emerald-950 px-1.5 py-0.2 rounded border border-emerald-500/40">
+                  YES
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-2 pt-2 border-t border-slate-800 flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase text-slate-400">AI SCORE</span>
+              <span className="text-sm font-black font-anton text-amber-400 flex items-center gap-1">
+                🔥 87<span className="text-[10px] font-normal text-slate-400">/100</span>
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Floating Meme Graphic: Gigachad / Cool Shades (Right) */}
-        <div className="hidden lg:flex absolute right-20 xl:right-24 top-60 pointer-events-none select-none z-0 animate-float-reverse opacity-85">
-          <div className="relative w-20 h-20 rounded-2xl bg-indigo-950/80 border-2 border-cyan-400/50 p-1.5 shadow-xl flex items-center justify-center rotate-[12deg]">
-            <svg viewBox="0 0 100 100" className="w-full h-full">
-              <polygon points="50,15 85,38 72,85 28,85 15,38" fill="#cbd5e1" />
-              <rect x="20" y="38" width="60" height="15" rx="3" fill="#0f172a" />
-              <polygon points="50,85 45,95 55,95" fill="#94a3b8" />
-              <path d="M35 70 Q50 78 65 70" stroke="#0f172a" strokeWidth="3" fill="none" />
-            </svg>
-            <div className="absolute -top-2 -left-2 px-1.5 py-0.5 rounded-lg bg-cyan-500 text-slate-950 font-black text-[9px] uppercase shadow">
-              CHAD 🗿
-            </div>
-          </div>
-        </div>
-
-        {/* Floating Ambient Emoji Matrix (Scattered Across Background) */}
-        <div className="absolute left-[8%] top-16 text-3xl opacity-75 animate-float pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">🔥</div>
-        <div className="absolute right-[8%] top-20 text-3xl opacity-75 animate-float-reverse pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">💀</div>
-        <div className="absolute left-[15%] bottom-8 text-2xl opacity-70 animate-float-wide pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">😂</div>
-        <div className="absolute right-[15%] bottom-8 text-2xl opacity-70 animate-float pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">🚀</div>
-        <div className="absolute left-[5%] top-1/2 text-2xl opacity-60 animate-float-reverse pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">🐸</div>
-        <div className="absolute right-[5%] top-1/2 text-2xl opacity-60 animate-float-wide pointer-events-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">👑</div>
-        <div className="absolute left-[22%] top-8 text-xl opacity-60 animate-pulse-glow pointer-events-none select-none">✨</div>
-        <div className="absolute right-[22%] top-6 text-xl opacity-60 animate-pulse-glow pointer-events-none select-none">💯</div>
+        {/* --- SCATTERED DECORATIVE FLOATING EMOJIS AROUND HERO --- */}
+        <div className="absolute left-[12%] top-12 text-2xl opacity-70 animate-float pointer-events-none select-none">😂</div>
+        <div className="absolute right-[18%] top-10 text-2xl opacity-70 animate-float-reverse pointer-events-none select-none">🔥</div>
+        <div className="absolute left-[6%] bottom-16 text-2xl opacity-70 animate-float-wide pointer-events-none select-none">💀</div>
+        <div className="absolute right-[12%] bottom-14 text-2xl opacity-70 animate-float pointer-events-none select-none">✨</div>
+        <div className="absolute left-[20%] top-6 text-xl opacity-60 animate-pulse-glow pointer-events-none select-none">👑</div>
+        <div className="absolute right-[28%] top-8 text-xl opacity-60 animate-pulse-glow pointer-events-none select-none">💯</div>
 
         {/* --- MAIN HERO CONTENT CONTAINER --- */}
-        <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
-          {/* Bhasad.org Presents Banner */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-pink-500/20 to-purple-500/20 backdrop-blur-md border border-amber-400/50 shadow-2xl mb-4 text-xs font-black uppercase tracking-wider text-amber-300 hover:scale-105 transition-transform cursor-default">
-            <span className="text-base animate-bounce-subtle">⚡</span>
-            <span>BHASAD.ORG BRINGS YOU THE BEST MEME GENERATOR</span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-brand-orange to-brand-pink text-white shadow-sm font-black">
-              2026
-            </span>
-          </div>
-
+        <div className="max-w-3xl mx-auto flex flex-col items-center text-center relative z-20">
           {/* Dominant Headline: Idea In, MEME OUT! */}
-          <div className="flex flex-col items-center leading-none mb-3">
-            <span className="font-caveat text-4xl sm:text-5xl md:text-6xl text-amber-300 -rotate-2 transform mb-1 font-bold drop-shadow-[0_2px_10px_rgba(251,191,36,0.5)]">
+          <div className="flex flex-col items-center leading-none mb-2">
+            <span className="font-caveat text-4xl sm:text-5xl md:text-6xl text-slate-900 font-bold -rotate-2 transform mb-1">
               Idea In,
             </span>
-            <h1 className="font-anton text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase tracking-tight bg-gradient-to-r from-amber-400 via-pink-500 via-purple-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_8px_30px_rgba(236,72,153,0.35)]">
+            <h1 className="font-anton text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase tracking-tight bg-gradient-to-r from-orange-500 via-rose-500 via-purple-600 to-blue-600 bg-clip-text text-transparent drop-shadow-sm">
               MEME OUT!
             </h1>
           </div>
 
-          {/* Subtitle (Without the red underline line) */}
-          <p className="text-sm sm:text-base md:text-lg text-slate-200 font-semibold max-w-xl mb-4 sm:mb-5 leading-relaxed">
-            Your idea.{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-cyan-300 font-extrabold">
+          {/* Subtitle */}
+          <p className="text-sm sm:text-base md:text-lg text-slate-700 font-bold max-w-xl mb-1 leading-relaxed">
+            Your idea. AI magic.{' '}
+            <span className="text-pink-600 font-extrabold">
               Legendary memes in seconds.
             </span>
           </p>
 
-          {/* Attention-Seeking Fun Social Platform Marquee Pill */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-6 sm:mb-8 select-none">
-            <span className="px-3 py-1 rounded-full bg-red-600/30 border border-red-500/50 text-red-300 text-[11px] font-black uppercase flex items-center gap-1 shadow-md animate-pulse">
-              <span>▶️</span> YouTube Shorts
-            </span>
-            <span className="px-3 py-1 rounded-full bg-pink-600/30 border border-pink-500/50 text-pink-300 text-[11px] font-black uppercase flex items-center gap-1 shadow-md">
-              <span>📸</span> Instagram Reels
-            </span>
-            <span className="px-3 py-1 rounded-full bg-blue-600/30 border border-blue-500/50 text-blue-300 text-[11px] font-black uppercase flex items-center gap-1 shadow-md">
-              <span>👥</span> Facebook Feed
-            </span>
-            <span className="px-3 py-1 rounded-full bg-emerald-600/30 border border-emerald-500/50 text-emerald-300 text-[11px] font-black uppercase flex items-center gap-1 shadow-md">
-              <span>💬</span> WhatsApp Status
-            </span>
-            <button
-              onClick={() => {
-                soundService.playAirhorn();
-              }}
-              className="px-3 py-1 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 text-[11px] font-black uppercase flex items-center gap-1 shadow-lg active:scale-95 transition-all"
-            >
-              <span>📢</span> AIRHORN!
-            </button>
-          </div>
+          {/* Bhasad.org Endorsement Statement */}
+          <p className="text-xs sm:text-sm font-extrabold text-slate-600 mb-6">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600 font-black">
+              Bhasad.org
+            </span>{' '}
+            brings you the <strong>best meme generator</strong>.
+          </p>
 
-          {/* --- FROSTED GENERATOR CONSOLE CARD --- */}
-          <div className="w-full rounded-3xl bg-white/95 backdrop-blur-xl shadow-[0_20px_70px_rgba(0,0,0,0.5)] border-2 border-purple-200/90 p-4 sm:p-7 flex flex-col gap-4 text-left transition-all text-slate-900">
-            {/* Input Header */}
+          {/* --- CRISP WHITE GENERATOR CONSOLE CARD (Primary Focus) --- */}
+          <div className="w-full rounded-3xl bg-white shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-purple-100 p-5 sm:p-7 flex flex-col gap-4 text-left transition-all text-slate-900">
+            {/* Input Header & Character Counter */}
             <div className="flex items-center justify-between">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-pink-500" />
-                <span>DESCRIBE WHAT HAPPENED</span>
+              <span className="text-xs font-black uppercase tracking-wider text-slate-500">
+                Describe what happened...
               </span>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold text-slate-400">
+                <span className="text-xs font-bold text-slate-400">
                   {activeIdea.length}/200
                 </span>
                 {activeIdea && (
                   <button
                     onClick={() => setActiveIdea('')}
-                    className="text-[11px] font-bold text-rose-500 hover:underline"
+                    className="text-xs font-bold text-slate-600 hover:text-rose-500 transition"
                   >
                     Clear
                   </button>
@@ -338,99 +311,73 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Large Textarea */}
+            {/* Textarea Input */}
             <div className="relative">
               <textarea
                 value={activeIdea}
                 onChange={(e) => setActiveIdea(e.target.value)}
                 maxLength={200}
-                rows={3}
-                placeholder="e.g. When your manager says the meeting will only take 5 minutes..."
-                className="w-full p-3.5 sm:p-4 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-pink-500 focus:bg-white text-slate-900 text-sm sm:text-base font-medium outline-none transition resize-none placeholder:text-slate-400 shadow-inner"
+                rows={2}
+                placeholder="Example: When your manager says the meeting will only take 5 minutes"
+                className="w-full p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:border-pink-500 focus:bg-white text-slate-900 text-sm sm:text-base font-medium outline-none transition resize-none placeholder:text-slate-400"
               />
-
-              {/* Interactive Quick Prompts */}
-              {!activeIdea && (
-                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-2">
-                  <span className="text-[11px] font-bold text-slate-400 whitespace-nowrap">
-                    💡 Try:
-                  </span>
-                  {sampleIdeas.slice(0, 2).map((hint, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        soundService.playPop();
-                        setActiveIdea(hint);
-                      }}
-                      className="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-purple-100 hover:text-purple-900 text-slate-600 text-xs font-semibold whitespace-nowrap transition border border-slate-200"
-                    >
-                      "{hint.slice(0, 32)}..."
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
 
-            {/* Tone Selector Row */}
-            <div className="flex flex-col gap-1.5 pt-1">
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
-                CHOOSE TONE
-              </span>
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-                {TONES.map((tone) => {
-                  const isSelected = selectedTone === tone.id;
-                  return (
-                    <button
-                      key={tone.id}
-                      onClick={() => {
-                        setSelectedTone(tone.id);
-                        soundService.playPop();
-                      }}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all duration-200 flex items-center gap-1.5 ${
-                        isSelected
-                          ? 'bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white shadow-md shadow-pink-500/30 scale-105'
-                          : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
-                      }`}
-                    >
-                      <span>{tone.emoji}</span>
-                      <span>{tone.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
+            {/* Tone / Vibe Selector Row */}
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+              {TONES.map((tone) => {
+                const isSelected = selectedTone === tone.id;
+                return (
+                  <button
+                    key={tone.id}
+                    onClick={() => {
+                      setSelectedTone(tone.id);
+                      soundService.playPop();
+                    }}
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold whitespace-nowrap transition-all duration-200 flex items-center gap-1.5 ${
+                      isSelected
+                        ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md scale-105'
+                        : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
+                    }`}
+                  >
+                    <span>{tone.emoji}</span>
+                    <span>{tone.label}</span>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Main Action CTA Button */}
+            {/* Main Action CTA Button: FORGE MY MEMES */}
             <button
               onClick={handleGenerate}
               disabled={isGeneratingUniverse}
-              className="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-orange-500 via-pink-500 via-purple-600 to-blue-600 hover:brightness-110 text-white font-black text-sm sm:text-base uppercase tracking-wider transition-all duration-300 shadow-xl shadow-pink-500/30 active:scale-98 flex items-center justify-center gap-2.5 disabled:opacity-75"
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-orange-500 via-pink-500 via-purple-600 to-indigo-600 hover:brightness-110 text-white font-black text-sm sm:text-base uppercase tracking-wider transition-all duration-300 shadow-xl shadow-pink-500/25 active:scale-98 flex items-center justify-center gap-2 disabled:opacity-75"
             >
               {isGeneratingUniverse ? (
                 <>
                   <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>FORGING 10 MEME FORMATS...</span>
+                  <span>FORGE IS COOKING 10 MEMES...</span>
                 </>
               ) : (
                 <>
-                  <Zap className="w-5 h-5 text-yellow-300 fill-yellow-300" />
-                  <span>✨ FORGE MEME UNIVERSE →</span>
+                  <Sparkles className="w-5 h-5 text-yellow-300 fill-yellow-300" />
+                  <span>✨ FORGE MY MEMES →</span>
                 </>
               )}
             </button>
 
-            {/* Secondary Creation Methods Row */}
-            <div className="flex flex-col items-center gap-2 pt-2 border-t border-slate-100">
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+            {/* Multimodal Creation Row (OR CREATE FROM) */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs font-bold text-slate-500">
+              <span className="uppercase text-[10px] font-black tracking-wider text-slate-400">
                 OR CREATE FROM
               </span>
-              <div className="flex flex-wrap items-center justify-center gap-2">
+              <div className="flex flex-wrap items-center gap-1.5">
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                  className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1 shadow-sm"
                 >
-                  <Upload className="w-3.5 h-3.5 text-brand-orange" />
-                  <span>Upload Photo</span>
+                  <ImageIcon className="w-3.5 h-3.5 text-blue-500" />
+                  <span>Photo</span>
                 </button>
 
                 <button
@@ -438,21 +385,10 @@ export const LandingPage: React.FC = () => {
                     soundService.playPop();
                     setCurrentView('video');
                   }}
-                  className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                  className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1 shadow-sm"
                 >
                   <Video className="w-3.5 h-3.5 text-rose-500" />
-                  <span>Upload Video</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    soundService.playPop();
-                    setCurrentView('video');
-                  }}
-                  className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
-                >
-                  <Film className="w-3.5 h-3.5 text-purple-500" />
-                  <span>Video to Meme</span>
+                  <span>Video</span>
                 </button>
 
                 <button
@@ -460,10 +396,32 @@ export const LandingPage: React.FC = () => {
                     soundService.playPop();
                     setIsTemplatesModalOpen(true);
                   }}
-                  className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                  className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1 shadow-sm"
                 >
-                  <FileText className="w-3.5 h-3.5 text-cyan-600" />
-                  <span>Text to Meme</span>
+                  <FileText className="w-3.5 h-3.5 text-purple-500" />
+                  <span>Screenshot</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    soundService.playPop();
+                    setActiveIdea('Voice note: When you wake up 2 minutes before the alarm goes off');
+                  }}
+                  className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1 shadow-sm"
+                >
+                  <Mic className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>Voice</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    soundService.playPop();
+                    setIsTemplatesModalOpen(true);
+                  }}
+                  className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1 shadow-sm"
+                >
+                  <Link className="w-3.5 h-3.5 text-cyan-500" />
+                  <span>URL</span>
                 </button>
 
                 <button
@@ -471,10 +429,10 @@ export const LandingPage: React.FC = () => {
                     soundService.playSparkle();
                     setIsPutMeInMemeModalOpen(true);
                   }}
-                  className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                  className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1 shadow-sm"
                 >
-                  <Camera className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Put Me in Meme</span>
+                  <UserCheck className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Put Me In</span>
                 </button>
               </div>
             </div>
@@ -491,39 +449,32 @@ export const LandingPage: React.FC = () => {
         />
       </section>
 
-      {/* 2. GENERATED MULTI-VERSE OUTPUT (If idea generated) */}
-      {currentUniverse && (
-        <div id="meme-universe-results" className="bg-[#0b0f19] text-white border-t border-slate-800">
-          <ContentUniverseSection />
-        </div>
-      )}
-
-      {/* 3. ✨ EXPLORE BY CATEGORY (Image Cards) */}
-      <div className="bg-[#0b0f19] text-white border-t border-slate-800/80">
+      {/* 2. ✨ EXPLORE THE MEME UNIVERSE (Category Cards matching Reference) */}
+      <div className="bg-[#fbfafd] border-t border-slate-200">
         <CategoryExplorer />
       </div>
 
-      {/* 4. POPULAR TEMPLATES + AI MEME STUDIO SIDE-BY-SIDE */}
-      <div className="bg-[#0f172a] text-white border-t border-slate-800/80">
-        <PopularAndStudioRow />
+      {/* 3. 👑 YOUR MEME UNIVERSE (6 Real Generated Memes + AI Studio Mockup) */}
+      <div id="meme-universe-results" className="bg-[#f6f4fa] border-t border-slate-200 py-8">
+        <ContentUniverseSection />
       </div>
 
-      {/* 5. TRENDING NOW */}
-      <div className="bg-[#0b0f19] text-white border-t border-slate-800/80">
+      {/* 4. 🔥 TRENDING NOW (Bottom Section matching Reference) */}
+      <div className="bg-[#fbfafd] border-t border-slate-200 py-8">
         <TrendsSection />
       </div>
 
-      {/* 6. DESI / INDIA MEME STUDIO */}
-      <div className="bg-[#0f172a] text-white border-t border-amber-500/20">
+      {/* 5. 🇮🇳 DESI / INDIA MEME STUDIO */}
+      <div className="bg-[#fffdf7] border-t border-amber-200 py-8">
         <DesiModeSection />
       </div>
 
-      {/* 7. COMMUNITY & INSPIRATION */}
-      <div className="bg-slate-950 text-white border-t border-slate-800">
+      {/* 6. COMMUNITY / THE FORGE */}
+      <div className="bg-slate-950 text-white border-t border-slate-800 py-8">
         <CommunitySection />
       </div>
 
-      {/* 8. FOOTER */}
+      {/* 7. FOOTER */}
       <Footer />
     </div>
   );

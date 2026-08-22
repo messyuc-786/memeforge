@@ -16,6 +16,8 @@ export async function generateContentUniverse(idea: string, userTone: MemeTone =
     const tpl4 = matched[3]?.template || MEME_TEMPLATES[3];
     const tpl5 = matched[4]?.template || MEME_TEMPLATES[4];
 
+    const topFormatted = cleanIdea.toLowerCase().startsWith('when') ? cleanIdea.toUpperCase() : `WHEN ${cleanIdea.toUpperCase()}`;
+
     // 1. Classic Main Meme
     const classicMeme: GeneratedMemeConcept = {
       id: `concept-classic-${Date.now()}`,
@@ -23,7 +25,7 @@ export async function generateContentUniverse(idea: string, userTone: MemeTone =
       tone: 'relatable',
       toneLabel: 'Classic Meme',
       toneEmoji: '🔥',
-      topText: `WHEN ${cleanIdea.toUpperCase()}`,
+      topText: topFormatted,
       bottomText: 'ME TRYING TO ACT NORMAL AND FAILING SPECTACULARLY 😭',
       fullCaption: `When ${cleanIdea} and you have to pretend everything is fine.`,
       templateId: tpl1.id,
