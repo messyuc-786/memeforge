@@ -2,16 +2,22 @@ import { GeneratedMemeConcept, MemeTemplate } from '../../types';
 import { MEME_TEMPLATES } from '../../data/templatesData';
 import { generateCreativeScore, generateMemeDNA } from './dnaService';
 
-export type RemixType = 
-  | 'swap_template' 
-  | 'more_savage' 
-  | 'more_wholesome' 
-  | 'more_absurd' 
-  | 'more_genz' 
-  | 'more_desi' 
-  | 'shorter' 
+const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+export type RemixType =
+  | 'swap_template'
+  | 'more_savage'
+  | 'more_wholesome'
+  | 'more_absurd'
+  | 'more_genz'
+  | 'more_desi'
+  | 'shorter'
   | 'longer_story'
-  | 'turn_video';
+  | 'turn_video'
+  | 'more_relatable'
+  | 'more_unhinged'
+  | 'corporate'
+  | 'different_punchline';
 
 /**
  * 10-Way Remix Engine
@@ -38,7 +44,7 @@ export function remixMemeConcept(
     }
     case 'more_savage': {
       newTone = 'savage';
-      newBottom = `BRO REALLY THOUGHT THIS WAS OKAY 💀 (EMOTIONAL DAMAGE LEVEL 999)`;
+      newBottom = pick(['COULDN\'T BE ME 💀', 'THIS AGED LIKE MILK', 'READ THAT AGAIN AND SIT WITH IT']);
       break;
     }
     case 'more_wholesome': {
@@ -76,6 +82,33 @@ export function remixMemeConcept(
     case 'turn_video': {
       newTop = `POV: ${concept.originalIdea.toUpperCase()}`;
       newBottom = `(WAIT FOR THE DROP... 🔊)`;
+      break;
+    }
+    case 'more_relatable': {
+      newTone = 'relatable';
+      newBottom = `LITERALLY EVERYONE, NO EXCEPTIONS 😩`;
+      break;
+    }
+    case 'more_unhinged': {
+      newTone = 'unhinged';
+      newTop = `NOBODY: / ABSOLUTELY NOBODY:`;
+      newBottom = `ME, UNPROMPTED: ${concept.originalIdea.toUpperCase()} 💀🔊`;
+      break;
+    }
+    case 'corporate': {
+      newTone = 'corporate';
+      newTop = `PER MY LAST EMAIL:`;
+      newBottom = `${concept.originalIdea.toUpperCase()} (TRANSLATION: CAN WE PLEASE BE SERIOUS?)`;
+      break;
+    }
+    case 'different_punchline': {
+      const altPunchlines = [
+        `AND THAT'S HOW THE CHAOS BEGAN 🎬`,
+        `PLOT TWIST NOBODY SAW COMING 😳`,
+        `NARRATOR: IT WAS NOT, IN FACT, FINE.`,
+        `SEASON FINALE ENERGY, HONESTLY`
+      ];
+      newBottom = altPunchlines[Math.floor(Math.random() * altPunchlines.length)];
       break;
     }
   }

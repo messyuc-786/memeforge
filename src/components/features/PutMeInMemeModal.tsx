@@ -4,6 +4,7 @@ import { useMeme } from '../../context/MemeContext';
 import { MEME_TEMPLATES } from '../../data/templatesData';
 import { createHeadCutout, createPersonalizedFaceSticker } from '../../services/ai/personalizationService';
 import { soundService } from '../../services/soundService';
+import { useEscapeToClose } from '../../hooks/useEscapeToClose';
 
 export const PutMeInMemeModal: React.FC = () => {
   const {
@@ -19,6 +20,7 @@ export const PutMeInMemeModal: React.FC = () => {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>(MEME_TEMPLATES[0].id);
   const [cutoutSrc, setCutoutSrc] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  useEscapeToClose(() => setIsPutMeInMemeModalOpen(false), isPutMeInMemeModalOpen);
 
   if (!isPutMeInMemeModalOpen) return null;
 
@@ -59,7 +61,12 @@ export const PutMeInMemeModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/80 backdrop-blur-md animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Put Me In The Meme"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/80 backdrop-blur-md animate-fadeIn"
+    >
       <div className="w-full max-w-2xl rounded-3xl bg-dark-900 border border-brand-pink/50 shadow-2xl flex flex-col overflow-hidden animate-scaleUp">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-dark-800 bg-gradient-to-r from-brand-pink/20 via-transparent to-transparent">
@@ -77,6 +84,7 @@ export const PutMeInMemeModal: React.FC = () => {
 
           <button
             onClick={() => setIsPutMeInMemeModalOpen(false)}
+            aria-label="Close Put Me In The Meme"
             className="p-2 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-400 hover:text-white transition"
           >
             <X className="w-5 h-5" />

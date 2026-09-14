@@ -1,13 +1,14 @@
-export type ToolMode = 
-  | 'meme' 
-  | 'cartoon' 
-  | 'bubble' 
-  | 'roast' 
-  | 'ai' 
-  | 'stickers' 
-  | 'filters' 
-  | 'draw' 
-  | 'templates';
+export type ToolMode =
+  | 'meme'
+  | 'cartoon'
+  | 'bubble'
+  | 'roast'
+  | 'ai'
+  | 'stickers'
+  | 'filters'
+  | 'draw'
+  | 'templates'
+  | 'layers';
 
 export type AppView = 
   | 'home' 

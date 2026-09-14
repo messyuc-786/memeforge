@@ -35,7 +35,7 @@ export const ContentUniverseSection: React.FC = () => {
   } = useMeme();
 
   const [activeTab, setActiveTab] = useState<string>('all');
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
 
   if (!currentUniverse) return null;
 
@@ -48,14 +48,24 @@ export const ContentUniverseSection: React.FC = () => {
     currentUniverse.absurdMeme
   ];
 
-  const filteredConcepts = activeTab === 'all'
-    ? allConcepts
-    : allConcepts.filter((c) => c.tone === activeTab || (activeTab === 'chaos' && c.tone === 'absurd'));
+  // The first forged concept gets top billing — the meme is the hero, not the UI chrome
+  const heroConcept = allConcepts[0];
+  const alternates = allConcepts.slice(1);
 
-  const handleDownloadDirect = (concept: GeneratedMemeConcept) => {
-    soundService.playVictoryChime();
+  const filteredAlternates = activeTab === 'all'
+    ? alternates
+    : alternates.filter((c) => c.tone === activeTab || (activeTab === 'chaos' && c.tone === 'absurd'));
+
+  const handleShareDirect = (concept: GeneratedMemeConcept) => {
+    soundService.playPop();
     loadConceptIntoStudio(concept);
     setIsExportModalOpen(true);
+  };
+
+  const handleSave = (concept: GeneratedMemeConcept) => {
+    soundService.playVictoryChime();
+    saveMemeToLibrary(concept);
+    setSavedIds((prev) => new Set(prev).add(concept.id));
   };
 
   return (
@@ -90,8 +100,76 @@ export const ContentUniverseSection: React.FC = () => {
             </button>
           </div>
 
-          {/* Vibe Filter Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar mb-4">
+          {/* HERO CONCEPT — the strongest/first forged meme gets visual priority */}
+          <div className="group relative rounded-2xl overflow-hidden bg-[#0c0922] border border-pink-500/40 shadow-lg mb-4">
+            <div
+              onClick={() => loadConceptIntoStudio(heroConcept)}
+              className="relative w-full aspect-[4/3] sm:aspect-video overflow-hidden bg-slate-950 cursor-pointer"
+            >
+              <img
+                src={heroConcept.templatePreviewUrl}
+                alt={heroConcept.templateTitle}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/90 p-4 flex flex-col justify-between text-center select-none pointer-events-none">
+                <span className="font-impact text-lg sm:text-xl uppercase tracking-wide text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.95)] line-clamp-2">
+                  {heroConcept.topText}
+                </span>
+                <span className="font-impact text-lg sm:text-xl uppercase tracking-wide text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.95)] line-clamp-2">
+                  {heroConcept.bottomText}
+                </span>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  soundService.playSparkle();
+                  setSelectedDNAConcept(heroConcept);
+                }}
+                title="Meme details"
+                className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/70 text-white/80 hover:text-white transition"
+              >
+                <MoreVertical className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Hero actions: Remix / Edit / Share / Save — the obvious next steps */}
+            <div className="grid grid-cols-4 gap-1.5 p-2.5 bg-black/30">
+              <button
+                onClick={() => {
+                  soundService.playSparkle();
+                  setSelectedRemixConcept(heroConcept);
+                }}
+                className="py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold text-[11px] uppercase transition flex flex-col items-center justify-center gap-0.5 border border-white/10"
+              >
+                <RefreshCw className="w-3.5 h-3.5 text-pink-400" />
+                <span>Remix</span>
+              </button>
+              <button
+                onClick={() => loadConceptIntoStudio(heroConcept)}
+                className="py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold text-[11px] uppercase transition flex flex-col items-center justify-center gap-0.5 border border-white/10"
+              >
+                <Edit3 className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Edit</span>
+              </button>
+              <button
+                onClick={() => handleShareDirect(heroConcept)}
+                className="py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold text-[11px] uppercase transition flex flex-col items-center justify-center gap-0.5 border border-white/10"
+              >
+                <Share2 className="w-3.5 h-3.5 text-purple-300" />
+                <span>Share</span>
+              </button>
+              <button
+                onClick={() => handleSave(heroConcept)}
+                className="py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold text-[11px] uppercase transition flex flex-col items-center justify-center gap-0.5 border border-white/10"
+              >
+                <Bookmark className={`w-3.5 h-3.5 ${savedIds.has(heroConcept.id) ? 'text-amber-400 fill-amber-400' : 'text-amber-400'}`} />
+                <span>{savedIds.has(heroConcept.id) ? 'Saved' : 'Save'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Vibe Filter Tabs — browse the alternatives */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar mb-3">
             {[
               { id: 'all', label: 'All', emoji: '✨' },
               { id: 'relatable', label: 'Relatable', emoji: '😊' },
@@ -108,8 +186,8 @@ export const ContentUniverseSection: React.FC = () => {
                 }}
                 className={`px-3 py-1 rounded-full text-xs font-black transition flex items-center gap-1 ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-[0_0_15px_rgba(236,72,153,0.5)] border border-pink-300'
-                    : 'bg-[#120e2e]/80 text-slate-300 border border-purple-500/30 hover:bg-[#1a1442]'
+                    ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border border-pink-400'
+                    : 'bg-[#120e2e]/80 text-slate-300 border border-white/10 hover:bg-[#1a1442]'
                 }`}
               >
                 <span>{tab.emoji}</span>
@@ -118,17 +196,16 @@ export const ContentUniverseSection: React.FC = () => {
             ))}
           </div>
 
-          {/* 6 Real Generated Meme Cards Grid (3 cols x 2 rows) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            {filteredConcepts.map((concept) => (
+          {/* Alternate concepts — easy to browse, smaller than the hero */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+            {filteredAlternates.map((concept) => (
               <div
                 key={concept.id}
-                className="group relative rounded-2xl overflow-hidden bg-[#0c0922] border border-purple-500/30 shadow-md hover:shadow-[0_0_30px_rgba(168,85,247,0.35)] hover:border-pink-500/80 transition-all duration-300 flex flex-col justify-between p-2.5 text-white hover:-translate-y-1"
+                className="group relative rounded-xl overflow-hidden bg-[#0c0922] border border-white/10 hover:border-pink-500/70 transition-all duration-300 flex flex-col justify-between p-1.5 text-white"
               >
-                {/* Template Image Viewport with Dark Gradient Overlay */}
                 <div
                   onClick={() => loadConceptIntoStudio(concept)}
-                  className="relative w-full aspect-square rounded-xl overflow-hidden bg-slate-950 border border-purple-500/20 flex items-center justify-center cursor-pointer"
+                  className="relative w-full aspect-square rounded-lg overflow-hidden bg-slate-950 border border-white/10 flex items-center justify-center cursor-pointer"
                 >
                   <img
                     src={concept.templatePreviewUrl}
@@ -136,57 +213,47 @@ export const ContentUniverseSection: React.FC = () => {
                     loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-
-                  {/* Dark Overlays with Meme Impact Typography */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-transparent to-black/85 p-2 flex flex-col justify-between text-center select-none pointer-events-none">
-                    <span className="font-impact text-xs sm:text-[13px] uppercase tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] line-clamp-2 leading-tight">
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-transparent to-black/85 p-1.5 flex flex-col justify-between text-center select-none pointer-events-none">
+                    <span className="font-impact text-[11px] uppercase tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] line-clamp-2 leading-tight">
                       {concept.topText}
                     </span>
-                    <span className="font-impact text-xs sm:text-[13px] uppercase tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] line-clamp-2 leading-tight">
+                    <span className="font-impact text-[11px] uppercase tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] line-clamp-2 leading-tight">
                       {concept.bottomText}
                     </span>
                   </div>
-
-                  {/* Top Right Dots Action */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      soundService.playSparkle();
-                      setSelectedDNAConcept(concept);
-                    }}
-                    className="absolute top-1.5 right-1.5 p-1 rounded-lg bg-black/70 text-white/80 hover:text-white transition"
-                  >
-                    <MoreVertical className="w-3.5 h-3.5" />
-                  </button>
                 </div>
 
-                {/* Card Action Buttons Row: Edit, Remix, Download */}
-                <div className="flex items-center gap-1.5 pt-2">
-                  <button
-                    onClick={() => loadConceptIntoStudio(concept)}
-                    className="flex-1 py-1.5 px-2 rounded-xl bg-[#18133b] hover:bg-[#251d5c] text-white font-bold text-[11px] uppercase transition flex items-center justify-center gap-1 border border-purple-500/30"
-                  >
-                    <Edit3 className="w-3 h-3 text-cyan-400" />
-                    <span>Edit</span>
-                  </button>
-
+                <div className="flex items-center gap-1 pt-1.5">
                   <button
                     onClick={() => {
                       soundService.playSparkle();
                       setSelectedRemixConcept(concept);
                     }}
-                    className="flex-1 py-1.5 px-2 rounded-xl bg-[#18133b] hover:bg-purple-900/80 text-white font-bold text-[11px] uppercase transition flex items-center justify-center gap-1 border border-purple-500/30"
+                    title="Remix"
+                    className="flex-1 py-1.5 rounded-lg bg-[#18133b] hover:bg-purple-900/80 text-white transition flex items-center justify-center border border-white/10"
                   >
                     <RefreshCw className="w-3 h-3 text-pink-400" />
-                    <span>Remix</span>
                   </button>
-
                   <button
-                    onClick={() => handleDownloadDirect(concept)}
-                    title="Download Meme"
-                    className="p-1.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:brightness-110 text-white transition flex items-center justify-center shadow-[0_0_15px_rgba(236,72,153,0.4)]"
+                    onClick={() => loadConceptIntoStudio(concept)}
+                    title="Edit"
+                    className="flex-1 py-1.5 rounded-lg bg-[#18133b] hover:bg-[#251d5c] text-white transition flex items-center justify-center border border-white/10"
                   >
-                    <Download className="w-3.5 h-3.5" />
+                    <Edit3 className="w-3 h-3 text-cyan-400" />
+                  </button>
+                  <button
+                    onClick={() => handleShareDirect(concept)}
+                    title="Share"
+                    className="flex-1 py-1.5 rounded-lg bg-[#18133b] hover:bg-purple-900/60 text-white transition flex items-center justify-center border border-white/10"
+                  >
+                    <Share2 className="w-3 h-3 text-purple-300" />
+                  </button>
+                  <button
+                    onClick={() => handleSave(concept)}
+                    title={savedIds.has(concept.id) ? 'Saved' : 'Save'}
+                    className="flex-1 py-1.5 rounded-lg bg-[#18133b] hover:bg-amber-900/40 text-white transition flex items-center justify-center border border-white/10"
+                  >
+                    <Bookmark className={`w-3 h-3 ${savedIds.has(concept.id) ? 'text-amber-400 fill-amber-400' : 'text-amber-400'}`} />
                   </button>
                 </div>
               </div>
@@ -195,19 +262,18 @@ export const ContentUniverseSection: React.FC = () => {
         </div>
 
         {/* Right Side: AI MEME STUDIO Card with 3D Phone Mockup (5 Columns) */}
-        <div className="lg:col-span-5 rounded-3xl cosmic-glass border-2 border-purple-500/40 p-6 shadow-2xl flex flex-col justify-between text-white relative overflow-hidden">
-          {/* Ambient Glows */}
-          <div className="absolute -top-16 -right-16 w-48 h-48 bg-pink-500/25 rounded-full blur-3xl pointer-events-none animate-pulse-glow" />
-          <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-purple-500/25 rounded-full blur-3xl pointer-events-none" />
+        <div className="lg:col-span-5 rounded-3xl bg-[#0c0922] border border-white/10 p-6 shadow-xl flex flex-col justify-between text-white relative overflow-hidden">
+          {/* Single restrained glow — mood, not noise */}
+          <div className="absolute -top-16 -right-16 w-48 h-48 bg-pink-500/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 flex flex-col gap-4">
             {/* Header */}
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-2xl font-black font-anton uppercase tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-cyan-400">
+                <h3 className="text-2xl font-black font-anton uppercase tracking-wide text-white">
                   AI MEME STUDIO
                 </h3>
-                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-pink-500 text-white shadow-[0_0_10px_#ec4899]">
+                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-pink-500 text-white">
                   NEW
                 </span>
               </div>
@@ -225,7 +291,7 @@ export const ContentUniverseSection: React.FC = () => {
                 { icon: <Zap className="w-4 h-4 mx-auto text-cyan-400" />, label: 'GIF Maker' },
                 { icon: <Share2 className="w-4 h-4 mx-auto text-emerald-400" />, label: 'Platform Optimize' }
               ].map((feat, i) => (
-                <div key={i} className="flex flex-col items-center gap-1 p-2 rounded-xl bg-white/5 border border-purple-500/20 hover:border-purple-500/50 transition">
+                <div key={i} className="flex flex-col items-center gap-1 p-2 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/50 transition">
                   {feat.icon}
                   <span className="text-[9px] font-bold text-slate-300 leading-tight">{feat.label}</span>
                 </div>
@@ -233,7 +299,7 @@ export const ContentUniverseSection: React.FC = () => {
             </div>
 
             {/* Visual 3D Phone Preview Mockup */}
-            <div className="relative mt-2 p-4 rounded-2xl bg-gradient-to-br from-[#0c0922] to-[#1c1242] border border-purple-500/30 flex items-center justify-between gap-4 overflow-hidden shadow-inner">
+            <div className="relative mt-2 p-4 rounded-2xl bg-gradient-to-br from-[#0c0922] to-[#1c1242] border border-white/10 flex items-center justify-between gap-4 overflow-hidden shadow-inner">
               <div className="flex flex-col gap-1 z-10">
                 <span className="text-[10px] font-black uppercase text-amber-400">VIRAL REEL PREVIEW</span>
                 <span className="font-impact text-sm sm:text-base uppercase tracking-wide text-white leading-tight">
@@ -264,7 +330,7 @@ export const ContentUniverseSection: React.FC = () => {
                 setCurrentView('studio');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 hover:brightness-110 text-white font-black text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(236,72,153,0.4)] active:scale-98"
+              className="w-full py-3.5 rounded-2xl bg-brand-orange hover:brightness-110 text-white font-black text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-brand-orange/25 active:scale-98"
             >
               <Wand2 className="w-4 h-4 text-yellow-300" />
               <span>Try AI Studio →</span>

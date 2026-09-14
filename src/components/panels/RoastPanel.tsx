@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Flame, Sparkles, Copy, Check, Plus, MessageSquare, Zap } from 'lucide-react';
 import { useMeme } from '../../context/MemeContext';
 import { RoastLevelType, RoastResult, TextElement } from '../../types';
-import { generateAIRoasts, hasApiKeyConfigured } from '../../services/aiService';
+import { generateAIRoasts } from '../../services/aiService';
 
 const ROAST_LEVELS: { level: RoastLevelType; name: string; emoji: string; desc: string; color: string }[] = [
   {
@@ -101,7 +101,7 @@ export const RoastPanel: React.FC = () => {
             <span>🔥</span> Roast My Photo
           </span>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-dark-800 text-slate-400">
-            {hasApiKeyConfigured() ? '✨ Gemini AI Connected' : '🧠 Smart Built-in Engine'}
+            {isFromAPI ? '✨ Live AI Response' : '🧠 Smart Built-in Engine'}
           </span>
         </div>
         <p className="text-xs text-slate-400">

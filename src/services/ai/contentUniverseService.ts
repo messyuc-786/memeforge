@@ -5,6 +5,62 @@ import { generateDesiMemeConcept } from './desiService';
 import { matchTemplatesForIdea } from './templateService';
 import { callGeminiApi } from './aiProvider';
 
+// Varied structural framings per tone, so the same idea doesn't always render as "WHEN X".
+// Picking randomly per generation also avoids identical output on repeated Forges of the same idea.
+const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+const CLASSIC_FRAMES = (idea: string) => [
+  `EXPECTATION: ${idea.toUpperCase()}`,
+  `${idea.toUpperCase()}`,
+  `NOBODY ASKED, BUT: ${idea.toUpperCase()}`,
+  `PLOT: ${idea.toUpperCase()}`
+];
+const CLASSIC_PUNCHLINES = [
+  'REALITY: NOT EVEN CLOSE',
+  'ME, ACTING NORMAL ABOUT IT: NOT WORKING',
+  'THIS IS FINE. THIS IS NOT FINE.',
+  'THE GAP BETWEEN THOSE TWO THINGS: IMMEASURABLE'
+];
+
+const RELATABLE_FRAMES = (idea: string) => [
+  `THAT EXACT SECOND ${idea.toUpperCase()} HAPPENS`,
+  `${idea.toUpperCase()}`,
+  `EVERYONE, EVERY TIME: ${idea.toUpperCase()}`
+];
+const RELATABLE_PUNCHLINES = [
+  'AND THE WHOLE ROOM GOES SILENT',
+  'INSTANT REGRET, NO REFUNDS',
+  'THERE IS NO COMING BACK FROM THIS',
+  'WE\'VE ALL BEEN THERE. WE\'RE STILL THERE.'
+];
+
+const SAVAGE_FRAMES = (idea: string) => [`${idea.toUpperCase()}`, `SO APPARENTLY: ${idea.toUpperCase()}`];
+const SAVAGE_PUNCHLINES = [
+  'COULDN\'T BE ME',
+  'THIS AGED LIKE MILK',
+  'NO NOTES. JUST DISAPPOINTMENT.',
+  'READ THAT AGAIN AND SIT WITH IT'
+];
+
+const ABSURD_FRAMES = (idea: string) => [
+  `SCIENTISTS ARE STILL STUDYING: ${idea.toUpperCase()}`,
+  `${idea.toUpperCase()}`,
+  `BREAKING: ${idea.toUpperCase()}`
+];
+const ABSURD_PUNCHLINES = [
+  'AND SOMEHOW IT ESCALATED FROM THERE',
+  'MEANWHILE, A CROW WATCHED IN SILENCE',
+  'THIS IS NOW A CULT. WE HAVE MERCH.',
+  'THE SIMULATION IS GLITCHING AGAIN'
+];
+
+const CORPORATE_FRAMES = () => ['PER MY LAST EMAIL:', 'CIRCLING BACK ON THIS:', 'JUST FLAGGING:'];
+const CORPORATE_PUNCHLINES = (idea: string) => [
+  `${idea.toUpperCase()} (LET'S TAKE THIS OFFLINE)`,
+  `${idea.toUpperCase()} — NO FURTHER ACTION NEEDED FROM YOU, JUST VISIBILITY`,
+  `${idea.toUpperCase()}. THANKS IN ADVANCE.`
+];
+
 export async function generateContentUniverse(idea: string, userTone: MemeTone = 'relatable'): Promise<{ universe: ContentUniversePack; isLiveApi: boolean }> {
   const cleanIdea = idea.trim() || 'When your manager says the meeting will only take five minutes';
   const matched = matchTemplatesForIdea(cleanIdea);
@@ -16,17 +72,15 @@ export async function generateContentUniverse(idea: string, userTone: MemeTone =
     const tpl4 = matched[3]?.template || MEME_TEMPLATES[3];
     const tpl5 = matched[4]?.template || MEME_TEMPLATES[4];
 
-    const topFormatted = cleanIdea.toLowerCase().startsWith('when') ? cleanIdea.toUpperCase() : `WHEN ${cleanIdea.toUpperCase()}`;
-
-    // 1. Classic Main Meme
+    // 1. Classic Main Meme — expectation-vs-reality structure
     const classicMeme: GeneratedMemeConcept = {
       id: `concept-classic-${Date.now()}`,
       originalIdea: cleanIdea,
       tone: 'relatable',
       toneLabel: 'Classic Meme',
       toneEmoji: '🔥',
-      topText: topFormatted,
-      bottomText: 'ME TRYING TO ACT NORMAL AND FAILING SPECTACULARLY 😭',
+      topText: pick(CLASSIC_FRAMES(cleanIdea)),
+      bottomText: pick(CLASSIC_PUNCHLINES),
       fullCaption: `When ${cleanIdea} and you have to pretend everything is fine.`,
       templateId: tpl1.id,
       templateTitle: tpl1.title,
@@ -37,15 +91,15 @@ export async function generateContentUniverse(idea: string, userTone: MemeTone =
       creativeScore: generateCreativeScore(cleanIdea, 'relatable')
     };
 
-    // 2. Relatable Alternative
+    // 2. Relatable Alternative — observational structure
     const relatableMeme: GeneratedMemeConcept = {
       id: `concept-relatable-${Date.now()}`,
       originalIdea: cleanIdea,
       tone: 'relatable',
       toneLabel: 'Everyday Relatable',
       toneEmoji: '😂',
-      topText: 'THAT EXACT MOMENT WHEN:',
-      bottomText: `${cleanIdea.toUpperCase()} AND EVERYONE IN THE ROOM JUST FREEZES`,
+      topText: pick(RELATABLE_FRAMES(cleanIdea)),
+      bottomText: pick(RELATABLE_PUNCHLINES),
       fullCaption: `Relatable moment: ${cleanIdea}`,
       templateId: tpl2.id,
       templateTitle: tpl2.title,
@@ -56,15 +110,15 @@ export async function generateContentUniverse(idea: string, userTone: MemeTone =
       creativeScore: generateCreativeScore(cleanIdea, 'relatable')
     };
 
-    // 3. Savage Burn Meme
+    // 3. Savage Burn Meme — short, brutal, no stock phrases
     const savageMeme: GeneratedMemeConcept = {
       id: `concept-savage-${Date.now()}`,
       originalIdea: cleanIdea,
       tone: 'savage',
       toneLabel: 'Savage Burn',
       toneEmoji: '💀',
-      topText: `BRO REALLY SAID: "${cleanIdea.toUpperCase()}"`,
-      bottomText: 'EMOTIONAL DAMAGE LEVEL 9000 • NO RECOVERY POSSIBLE',
+      topText: pick(SAVAGE_FRAMES(cleanIdea)),
+      bottomText: pick(SAVAGE_PUNCHLINES),
       fullCaption: `Savage reaction to "${cleanIdea}"`,
       templateId: tpl3.id,
       templateTitle: tpl3.title,
@@ -78,15 +132,15 @@ export async function generateContentUniverse(idea: string, userTone: MemeTone =
     // 4. Desi / Indian Cultural Meme
     const desiMeme = generateDesiMemeConcept(cleanIdea);
 
-    // 5. Corporate / Workplace Meme
+    // 5. Corporate / Workplace Meme — deadpan office register
     const corporateMeme: GeneratedMemeConcept = {
       id: `concept-corporate-${Date.now()}`,
       originalIdea: cleanIdea,
       tone: 'corporate',
       toneLabel: 'Corporate / Office',
       toneEmoji: '💼',
-      topText: 'PER MY LAST EMAIL:',
-      bottomText: `${cleanIdea.toUpperCase()} (TRANSLATION: CAN YOU PLEASE BE SERIOUS?)`,
+      topText: pick(CORPORATE_FRAMES()),
+      bottomText: pick(CORPORATE_PUNCHLINES(cleanIdea)),
       fullCaption: `Corporate translation for: ${cleanIdea}`,
       templateId: tpl4.id,
       templateTitle: tpl4.title,
@@ -97,15 +151,15 @@ export async function generateContentUniverse(idea: string, userTone: MemeTone =
       creativeScore: generateCreativeScore(cleanIdea, 'corporate')
     };
 
-    // 6. Absurd Meme
+    // 6. Absurd Meme — surreal escalation, not a fixed template
     const absurdMeme: GeneratedMemeConcept = {
       id: `concept-absurd-${Date.now()}`,
       originalIdea: cleanIdea,
       tone: 'absurd',
       toneLabel: 'Absurd / Unhinged',
       toneEmoji: '🤪',
-      topText: 'MY LAST 2 BRAIN CELLS AT 3:45 AM:',
-      bottomText: `WHAT IF ${cleanIdea.toUpperCase()} BUT WITH GALAXY LASERS? 🚀`,
+      topText: pick(ABSURD_FRAMES(cleanIdea)),
+      bottomText: pick(ABSURD_PUNCHLINES),
       fullCaption: `Unhinged absurdity: ${cleanIdea}`,
       templateId: tpl5.id,
       templateTitle: tpl5.title,

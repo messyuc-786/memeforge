@@ -41,7 +41,7 @@ export const MEME_CATEGORIES: MemeCategoryItem[] = [
         <circle cx="290" cy="110" r="14" fill="#fbbf24"/>
         <text x="290" y="70" font-size="34">🚀</text>
         <text x="70" y="120" font-size="42">📈</text>
-        <text x="80" y="370" font-family="Arial, sans-serif" font-weight="900" font-size="22" fill="#38bdf8">+420% VIRAL</text>
+        <text x="80" y="370" font-family="Arial, sans-serif" font-weight="900" font-size="22" fill="#38bdf8">TRENDING NOW</text>
       </svg>
     `),
     tag: 'Hot Now',

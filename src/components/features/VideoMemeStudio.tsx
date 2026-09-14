@@ -24,16 +24,44 @@ export const VideoMemeStudio: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // Tracks the in-flight export so we can tear it down cleanly if this view unmounts mid-recording
+  const activeExportRef = useRef<{ recorder: MediaRecorder; progressTimer: number } | null>(null);
+  const isMountedRef = useRef(true);
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [isExporting, setIsExporting] = useState<boolean>(false);
+  const [exportProgress, setExportProgress] = useState<number>(0);
+  const [exportedVideoUrl, setExportedVideoUrl] = useState<string | null>(null);
+  const [exportUnsupported, setExportUnsupported] = useState<boolean>(false);
   const [aiHooks, setAiHooks] = useState<string[]>([]);
+
+  // Real export support check — MediaRecorder + canvas.captureStream, both native browser APIs
+  const exportSupported =
+    typeof window !== 'undefined' &&
+    typeof MediaRecorder !== 'undefined' &&
+    typeof HTMLCanvasElement !== 'undefined' &&
+    typeof (HTMLCanvasElement.prototype as any).captureStream === 'function';
 
   // Sample demo video if none uploaded
   const demoVideoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
 
   const activeVideoUrl = videoProject.videoUrl || demoVideoUrl;
+
+  const CANVAS_DIMS: Record<'9:16' | '1:1' | '16:9', { w: number; h: number }> = {
+    '9:16': { w: 720, h: 1280 },
+    '1:1': { w: 720, h: 720 },
+    '16:9': { w: 1280, h: 720 }
+  };
+
+  // Keep the export canvas sized to the chosen aspect ratio (it defaulted to 300x150 before, breaking export)
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const dims = CANVAS_DIMS[videoProject.aspectRatio];
+    canvas.width = dims.w;
+    canvas.height = dims.h;
+  }, [videoProject.aspectRatio]);
 
   // Render video canvas frame loop
   useEffect(() => {
@@ -98,6 +126,12 @@ export const VideoMemeStudio: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Revoke the previous upload's object URL before replacing it — otherwise each
+    // re-upload leaks the prior blob for the life of the tab.
+    if (videoProject.videoUrl) {
+      URL.revokeObjectURL(videoProject.videoUrl);
+    }
+
     const url = URL.createObjectURL(file);
     setVideoProject((prev) => ({
       ...prev,
@@ -107,15 +141,163 @@ export const VideoMemeStudio: React.FC = () => {
     soundService.playSparkle();
   };
 
+  // Revoke the uploaded video's and any exported video's object URLs when this view unmounts
+  useEffect(() => {
+    return () => {
+      if (videoProject.videoUrl) URL.revokeObjectURL(videoProject.videoUrl);
+      if (exportedVideoUrl) URL.revokeObjectURL(exportedVideoUrl);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleGenerateHooks = () => {
     soundService.playSparkle();
     const { hooks } = generateVideoHooks('work meeting');
     setAiHooks(hooks);
   };
 
-  const handleExportVideo = () => {
-    soundService.playVictoryChime();
-    alert('Video Meme rendering complete! In 2026 mode, video is packaged with synchronized meme banners.');
+  // Real export: records the canvas (video frames + burned-in banner text, drawn by the loop above)
+  // via canvas.captureStream() + MediaRecorder — no server, no new dependency. Produces a real
+  // downloadable .webm file. If the browser lacks these native APIs, we say so — we do not fake success.
+  const handleExportVideo = async () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+
+    if (!exportSupported) {
+      setExportUnsupported(true);
+      return;
+    }
+
+    const mimeType = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'].find((t) =>
+      MediaRecorder.isTypeSupported(t)
+    );
+    if (!mimeType) {
+      setExportUnsupported(true);
+      return;
+    }
+
+    soundService.playPop();
+    setExportUnsupported(false);
+    // Revoke any previous export's blob URL before starting a new one
+    setExportedVideoUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setExportProgress(0);
+    setIsExporting(true);
+
+    const dims = CANVAS_DIMS[videoProject.aspectRatio];
+    canvas.width = dims.w;
+    canvas.height = dims.h;
+
+    const wasLooping = video.loop;
+    video.loop = false;
+    video.currentTime = 0;
+    video.playbackRate = 1;
+
+    // Capture the canvas (visuals + captions). Add the source video's audio track too, unless muted.
+    const canvasStream = (canvas as any).captureStream(30) as MediaStream;
+    let outputStream = canvasStream;
+    if (!video.muted && typeof (video as any).captureStream === 'function') {
+      try {
+        const audioTracks = ((video as any).captureStream() as MediaStream).getAudioTracks();
+        if (audioTracks.length) {
+          outputStream = new MediaStream([...canvasStream.getVideoTracks(), ...audioTracks]);
+        }
+      } catch (err) {
+        console.warn('Audio capture unavailable, exporting video-only:', err);
+      }
+    }
+
+    const recorder = new MediaRecorder(outputStream, { mimeType });
+    const chunks: BlobPart[] = [];
+    recorder.ondataavailable = (e) => {
+      if (e.data.size > 0) chunks.push(e.data);
+    };
+
+    const teardown = () => {
+      if (activeExportRef.current?.progressTimer) window.clearInterval(activeExportRef.current.progressTimer);
+      activeExportRef.current = null;
+      video.loop = wasLooping;
+      video.onended = null;
+    };
+
+    const cleanupAndFinish = () => {
+      teardown();
+      if (!isMountedRef.current) return; // view was unmounted mid-export — don't update unmounted state
+      const blob = new Blob(chunks, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      setExportedVideoUrl(url);
+      setExportProgress(100);
+      setIsExporting(false);
+      soundService.playVictoryChime();
+    };
+
+    recorder.onstop = cleanupAndFinish;
+    recorder.onerror = (e) => {
+      console.error('Video export failed:', e);
+      teardown();
+      if (!isMountedRef.current) return;
+      setIsExporting(false);
+      setExportUnsupported(true);
+    };
+
+    video.onended = () => {
+      if (recorder.state !== 'inactive') recorder.stop();
+    };
+
+    const progressTimer = window.setInterval(() => {
+      if (video.duration && isMountedRef.current) {
+        setExportProgress(Math.min(99, Math.round((video.currentTime / video.duration) * 100)));
+      }
+    }, 200);
+
+    activeExportRef.current = { recorder, progressTimer };
+
+    recorder.start();
+    try {
+      await video.play();
+      if (isMountedRef.current) setIsPlaying(true);
+    } catch (err) {
+      console.error('Could not play source video for export:', err);
+      recorder.stop();
+    }
+  };
+
+  // Stop any active recording/stream/timer if this view unmounts mid-export — prevents a
+  // dangling MediaRecorder, an open media stream, and stale setState calls on an unmounted component.
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      const active = activeExportRef.current;
+      if (active) {
+        window.clearInterval(active.progressTimer);
+        if (active.recorder.state !== 'inactive') {
+          active.recorder.ondataavailable = null;
+          active.recorder.onstop = null;
+          active.recorder.onerror = null;
+          try {
+            active.recorder.stream.getTracks().forEach((track) => track.stop());
+            active.recorder.stop();
+          } catch {
+            // recorder may already be stopping — safe to ignore
+          }
+        }
+        activeExportRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleDownloadExportedVideo = () => {
+    if (!exportedVideoUrl) return;
+    const anchor = document.createElement('a');
+    anchor.href = exportedVideoUrl;
+    anchor.download = `memeforge-video-${Date.now()}.webm`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
   };
 
   return (
@@ -127,10 +309,10 @@ export const VideoMemeStudio: React.FC = () => {
             <Film className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-black font-anton uppercase tracking-wide text-slate-100 flex items-center gap-2">
+            <h1 className="text-2xl font-black font-anton uppercase tracking-wide text-slate-100 flex flex-wrap items-center gap-2">
               <span>VIDEO MEME STUDIO</span>
-              <span className="text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-brand-orange text-white">
-                9:16 YOUTUBE SHORTS &amp; INSTAGRAM REELS
+              <span className="text-[10px] uppercase font-black px-2 py-1 rounded-lg bg-brand-orange text-white leading-tight whitespace-normal">
+                9:16 · Shorts &amp; Reels
               </span>
             </h1>
             <p className="text-xs text-slate-400">Trim, caption, hook, and forge viral short-form video memes</p>
@@ -185,6 +367,10 @@ export const VideoMemeStudio: React.FC = () => {
               className="w-full h-full object-cover"
               playsInline
             />
+
+            {/* Off-screen export canvas: the drawFrame loop paints video + burned-in captions here.
+                It must be mounted (even invisibly) for captureStream() to have real frames to record. */}
+            <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
 
             {/* Overlay Meme Banners */}
             <div className="absolute top-0 inset-x-0 bg-dark-950/85 p-3 text-center pointer-events-none border-b border-white/10">
@@ -299,14 +485,49 @@ export const VideoMemeStudio: React.FC = () => {
             )}
           </div>
 
-          {/* Export Action */}
-          <button
-            onClick={handleExportVideo}
-            className="w-full py-4 rounded-3xl bg-gradient-to-r from-brand-orange via-brand-pink to-brand-purple text-white font-black text-sm uppercase tracking-wider shadow-xl shadow-brand-orange/25 hover:scale-[1.02] active:scale-98 transition flex items-center justify-center gap-2"
-          >
-            <Download className="w-5 h-5 stroke-[3]" />
-            <span>Export 9:16 Video Reel →</span>
-          </button>
+          {/* Export Action — real recording via canvas.captureStream + MediaRecorder */}
+          {!exportSupported || exportUnsupported ? (
+            <div className="w-full py-3.5 px-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold text-center">
+              Video export isn't supported in this browser. Try a recent Chrome or Edge on desktop.
+            </div>
+          ) : exportedVideoUrl ? (
+            <button
+              onClick={handleDownloadExportedVideo}
+              className="w-full py-4 rounded-3xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-black text-sm uppercase tracking-wider shadow-xl hover:scale-[1.02] active:scale-98 transition flex items-center justify-center gap-2"
+            >
+              <Download className="w-5 h-5 stroke-[3]" />
+              <span>Download Video (.webm) →</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleExportVideo}
+              disabled={isExporting}
+              className="w-full py-4 rounded-3xl bg-gradient-to-r from-brand-orange via-brand-pink to-brand-purple text-white font-black text-sm uppercase tracking-wider shadow-xl shadow-brand-orange/25 hover:scale-[1.02] active:scale-98 transition flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100"
+            >
+              {isExporting ? (
+                <>
+                  <div className="w-5 h-5 border-[3px] border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Recording… {exportProgress}%</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-5 h-5 stroke-[3]" />
+                  <span>Export 9:16 Video Reel →</span>
+                </>
+              )}
+            </button>
+          )}
+          {exportedVideoUrl && (
+            <button
+              onClick={() => {
+                if (exportedVideoUrl) URL.revokeObjectURL(exportedVideoUrl);
+                setExportedVideoUrl(null);
+              }}
+              className="w-full py-2 text-[11px] font-semibold text-slate-500 hover:text-slate-300 transition"
+            >
+              Export again
+            </button>
+          )}
         </div>
       </div>
     </div>

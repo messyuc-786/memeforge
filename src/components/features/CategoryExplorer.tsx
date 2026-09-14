@@ -33,19 +33,7 @@ export const CategoryExplorer: React.FC = () => {
     }, 150);
   };
 
-  const categoryCounts: Record<string, string> = {
-    trending: '28.4K memes',
-    'ai-memes': '12.8K memes',
-    'movies-tv': '18.7K memes',
-    cricket: '15.3K memes',
-    bollywood: '14.2K memes',
-    gaming: '16.1K memes',
-    office: '21.9K memes',
-    relationships: '11.6K memes',
-    animals: '17.4K memes',
-    'desi-memes': '22.7K memes'
-  };
-
+  // Honest, non-numeric labels — no fabricated usage/engagement counts
   return (
     <section className="w-full max-w-7xl mx-auto px-4 py-6">
       {/* Section Header */}
@@ -80,7 +68,7 @@ export const CategoryExplorer: React.FC = () => {
           <div
             key={cat.id}
             onClick={() => handleCategoryClick(cat)}
-            className="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-[#0c0922] border border-purple-500/30 shadow-md hover:shadow-[0_0_25px_rgba(236,72,153,0.4)] hover:border-pink-500 transition-all duration-300 cursor-pointer flex flex-col justify-end p-2.5 text-white hover:-translate-y-1"
+            className="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-[#0c0922] border border-white/10 shadow-md hover:border-pink-500/60 transition-all duration-300 cursor-pointer flex flex-col justify-end p-2.5 text-white hover:-translate-y-1"
           >
             {/* Background Visual Image */}
             <img
@@ -98,8 +86,8 @@ export const CategoryExplorer: React.FC = () => {
               <span className="text-xs font-black text-white group-hover:text-pink-400 transition-colors truncate">
                 {cat.emoji} {cat.title}
               </span>
-              <span className="text-[9px] font-bold text-slate-300/80 font-mono">
-                {categoryCounts[cat.id] || '10K+ memes'}
+              <span className="text-[9px] font-bold text-slate-300/80 font-mono uppercase tracking-wide">
+                Tap to Forge
               </span>
             </div>
           </div>
@@ -111,7 +99,7 @@ export const CategoryExplorer: React.FC = () => {
             soundService.playPop();
             setIsTemplatesModalOpen(true);
           }}
-          className="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-gradient-to-br from-purple-900/60 to-indigo-950/80 border border-purple-500/40 shadow-md hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] hover:border-purple-400 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center p-2 text-center hover:-translate-y-1 backdrop-blur-md"
+          className="group relative rounded-2xl overflow-hidden aspect-[3/4] bg-gradient-to-br from-purple-900/60 to-indigo-950/80 border border-white/10 shadow-md hover:border-purple-400/60 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center p-2 text-center hover:-translate-y-1 backdrop-blur-md"
         >
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-500 to-purple-600 text-white flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-lg">
             <Sparkles className="w-4 h-4" />
@@ -119,7 +107,7 @@ export const CategoryExplorer: React.FC = () => {
           <span className="text-[11px] font-black text-white uppercase tracking-wider leading-tight">
             View All
           </span>
-          <span className="text-xs text-pink-400 font-bold">100+ →</span>
+          <span className="text-xs text-pink-400 font-bold">Browse all →</span>
         </div>
       </div>
     </section>

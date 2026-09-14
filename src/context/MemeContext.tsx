@@ -30,7 +30,8 @@ interface MemeContextType {
   currentUniverse: ContentUniversePack | null;
   setCurrentUniverse: (pack: ContentUniversePack | null) => void;
   isGeneratingUniverse: boolean;
-  generateUniverse: (idea: string, tone?: MemeTone) => Promise<void>;
+  generateUniverse: (idea: string, tone?: MemeTone) => Promise<boolean>;
+  generationError: string | null;
 
   // Canvas Studio State
   project: MemeProject;
@@ -156,6 +157,7 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [activeIdea, setActiveIdea] = useState<string>('When your manager says the meeting will only take five minutes');
   const [currentUniverse, setCurrentUniverse] = useState<ContentUniversePack | null>(null);
   const [isGeneratingUniverse, setIsGeneratingUniverse] = useState<boolean>(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
   // Canvas Studio State
   const [project, setProject] = useState<MemeProject>(() => {
@@ -254,15 +256,25 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
     saveProjectToStorage(targetState);
   };
 
-  const generateUniverse = async (idea: string, tone: MemeTone = 'relatable') => {
+  const generateUniverse = async (idea: string, tone: MemeTone = 'relatable'): Promise<boolean> => {
+    // Guard against duplicate/overlapping submissions (e.g. rapid double-tap on mobile)
+    if (isGeneratingUniverse) return false;
+    if (!idea || !idea.trim()) {
+      setGenerationError('Type an idea before forging.');
+      return false;
+    }
     setIsGeneratingUniverse(true);
+    setGenerationError(null);
     soundService.playSparkle();
     try {
       const { universe } = await generateContentUniverse(idea, tone);
       setCurrentUniverse(universe);
       soundService.playVictoryChime();
+      return true;
     } catch (err) {
       console.error('Universe generation failed:', err);
+      setGenerationError("That didn't forge properly. Give it another try.");
+      return false;
     } finally {
       setIsGeneratingUniverse(false);
     }
@@ -464,6 +476,7 @@ export const MemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setCurrentUniverse,
         isGeneratingUniverse,
         generateUniverse,
+        generationError,
         project,
         setProject,
         toolMode,

@@ -1,34 +1,30 @@
-import React, { useState } from 'react';
-import { X, Key, Shield, Trash2, CheckCircle2, Sparkles, AlertCircle } from 'lucide-react';
+import React from 'react';
+import { X, Shield, Trash2, Sparkles, Key } from 'lucide-react';
 import { useMeme } from '../../context/MemeContext';
-import { getStoredApiKey, saveStoredApiKey } from '../../services/aiService';
 import { clearProjectStorage } from '../../services/storageService';
+import { useEscapeToClose } from '../../hooks/useEscapeToClose';
 
 export const SettingsModal: React.FC = () => {
   const { isSettingsModalOpen, setIsSettingsModalOpen, clearProject } = useMeme();
-  const [apiKey, setApiKey] = useState<string>(getStoredApiKey());
-  const [isSaved, setIsSaved] = useState<boolean>(false);
+  useEscapeToClose(() => setIsSettingsModalOpen(false), isSettingsModalOpen);
 
   if (!isSettingsModalOpen) return null;
-
-  const handleSaveKey = () => {
-    saveStoredApiKey(apiKey);
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2500);
-  };
 
   const handleClearAll = () => {
     if (window.confirm('Clear all autosaved memes and reset settings?')) {
       clearProjectStorage();
       clearProject();
-      setApiKey('');
-      saveStoredApiKey('');
       setIsSettingsModalOpen(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/80 backdrop-blur-md animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Studio Settings"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/80 backdrop-blur-md animate-fadeIn"
+    >
       <div className="w-full max-w-lg rounded-3xl bg-dark-900 border border-dark-700 shadow-2xl flex flex-col overflow-hidden animate-scaleUp">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-dark-800">
@@ -40,12 +36,13 @@ export const SettingsModal: React.FC = () => {
               <h2 className="text-lg font-black font-anton uppercase tracking-wide text-slate-100">
                 Studio Settings &amp; AI
               </h2>
-              <p className="text-xs text-slate-400">Configure optional AI keys &amp; preferences</p>
+              <p className="text-xs text-slate-400">Preferences &amp; AI engine status</p>
             </div>
           </div>
 
           <button
             onClick={() => setIsSettingsModalOpen(false)}
+            aria-label="Close Settings"
             className="p-2 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-400 hover:text-white transition"
           >
             <X className="w-5 h-5" />
@@ -54,43 +51,16 @@ export const SettingsModal: React.FC = () => {
 
         {/* Body */}
         <div className="p-6 flex flex-col gap-6 overflow-y-auto max-h-[75vh]">
-          {/* AI Key Section */}
+          {/* AI Engine Status — no key entry: the provider key lives server-side only */}
           <div className="flex flex-col gap-2.5 p-4 rounded-2xl bg-dark-850 border border-dark-700">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-extrabold text-brand-yellow uppercase tracking-wider flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4" /> Google Gemini API Key (Optional)
-              </span>
-              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-dark-800 text-slate-400">
-                {apiKey ? 'Connected' : 'Offline Engine Active'}
-              </span>
-            </div>
-
+            <span className="text-xs font-extrabold text-brand-yellow uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4" /> AI Generation Engine
+            </span>
             <p className="text-xs text-slate-300 leading-relaxed">
-              MemeForge runs a high-speed intelligent humor engine out-of-the-box with <strong>zero setup</strong>. If you want live cloud AI vision multimodal captions, enter your free Google Gemini API key below:
+              MemeForge runs a fast built-in humor engine out-of-the-box with <strong>zero setup</strong>. When this
+              deployment has cloud AI configured, generation automatically upgrades — there's nothing to enter here,
+              and no key is ever stored in your browser.
             </p>
-
-            <div className="flex items-center gap-2 pt-1">
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="AIzaSy..."
-                className="flex-1 px-3.5 py-2.5 rounded-xl bg-dark-900 border border-dark-700 focus:border-brand-yellow text-white text-xs font-mono outline-none transition"
-              />
-              <button
-                onClick={handleSaveKey}
-                className="px-4 py-2.5 rounded-xl bg-brand-yellow hover:bg-brand-yellow/90 text-slate-950 font-extrabold text-xs transition shadow-md"
-              >
-                {isSaved ? 'Saved!' : 'Save Key'}
-              </button>
-            </div>
-
-            {isSaved && (
-              <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-bold animate-fadeIn">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>API key updated successfully!</span>
-              </div>
-            )}
           </div>
 
           {/* Privacy Note */}

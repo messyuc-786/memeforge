@@ -3,7 +3,8 @@ import {
   Upload,
   Image as ImageIcon,
   Copy,
-  Layers,
+  ArrowUp,
+  ArrowDown,
   Trash2,
   Move,
   Maximize2,
@@ -401,37 +402,44 @@ export const MemeCanvas: React.FC = () => {
             <button
               onClick={() => duplicateElement(selectedElement.id)}
               title="Duplicate"
-              className="p-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 hover:text-white transition"
+              className="p-2.5 min-w-[36px] min-h-[36px] rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 hover:text-white transition flex items-center justify-center"
             >
               <Copy className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => bringForward(selectedElement.id)}
               title="Bring Forward"
-              className="p-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 hover:text-white transition"
+              className="p-2.5 min-w-[36px] min-h-[36px] rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 hover:text-white transition flex items-center justify-center"
             >
-              <Layers className="w-3.5 h-3.5" />
+              <ArrowUp className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => sendBackward(selectedElement.id)}
+              title="Send Backward"
+              className="p-2.5 min-w-[36px] min-h-[36px] rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 hover:text-white transition flex items-center justify-center"
+            >
+              <ArrowDown className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => {
                 updateElement(selectedElement.id, { x: 50, y: 50 });
               }}
               title="Center on Canvas"
-              className="p-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 hover:text-white transition"
+              className="p-2.5 min-w-[36px] min-h-[36px] rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 hover:text-white transition flex items-center justify-center"
             >
               <Move className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => removeElement(selectedElement.id)}
               title="Delete Element"
-              className="p-1.5 rounded-lg bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white transition"
+              className="p-2.5 min-w-[36px] min-h-[36px] rounded-lg bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white transition flex items-center justify-center"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => setSelectedElementId(null)}
               title="Deselect"
-              className="p-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-400 hover:text-white transition"
+              className="p-2.5 min-w-[36px] min-h-[36px] rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-400 hover:text-white transition flex items-center justify-center"
             >
               <X className="w-3.5 h-3.5" />
             </button>

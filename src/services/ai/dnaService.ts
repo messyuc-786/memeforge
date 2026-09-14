@@ -51,44 +51,47 @@ export function generateMemeDNA(idea: string, tone: MemeTone): MemeDNA {
 }
 
 /**
- * Generate AI Creative Score Breakdown (0-100) + Actionable Suggestions
+ * Meme Check: actionable, idea-aware editing suggestions.
+ *
+ * NOTE: `totalScore`/`ratingLabel`/`breakdown` are kept only for backward type-compatibility
+ * with existing GeneratedMemeConcept consumers — the UI no longer displays them as a fake
+ * precision "viral score", since that's exactly the kind of unsupported claim to avoid.
+ * The real output here is `suggestions`: concrete, actionable next steps.
  */
 export function generateCreativeScore(idea: string, tone: MemeTone): CreativeScore {
-  // Deterministic realistic high scores (85 - 96)
-  const hook = Math.min(98, Math.max(82, 86 + (idea.length % 11)));
-  const relatability = tone === 'relatable' || tone === 'desi' ? 96 : 88;
-  const timing = 92;
-  const caption = 90 + (idea.length % 7);
-  const visual = 94;
-  const shareability = tone === 'savage' || tone === 'relatable' ? 95 : 89;
+  const wordCount = idea.trim().split(/\s+/).filter(Boolean).length;
 
-  const totalScore = Math.round((hook + relatability + timing + caption + visual + shareability) / 6);
+  const suggestions: string[] = [];
 
-  let ratingLabel: 'Legendary Dank' | 'Viral Tier' | 'High Impact' | 'Solid Meme' = 'Viral Tier';
-  if (totalScore >= 93) ratingLabel = 'Legendary Dank';
-  else if (totalScore >= 88) ratingLabel = 'Viral Tier';
-  else if (totalScore >= 80) ratingLabel = 'High Impact';
-  else ratingLabel = 'Solid Meme';
+  if (wordCount > 14) {
+    suggestions.push('Shorten this — trim the idea to its sharpest few words for a punchier read.');
+  }
+  if (tone !== 'savage' && tone !== 'unhinged') {
+    suggestions.push('Sharpen the punchline — cut extra words from the bottom text so the joke lands faster.');
+  }
+  if (tone !== 'unhinged' && tone !== 'absurd') {
+    suggestions.push('Make it more chaotic — try an Unhinged or Absurd remix for a bigger contrast.');
+  }
+  if (tone !== 'desi') {
+    suggestions.push('Make it more Desi — remix with Hinglish phrasing for a culturally sharper angle.');
+  }
+  suggestions.push('Increase contrast — make the top and bottom text say two clearly different things.');
 
-  const suggestions: string[] = [
-    'Try the 9:16 vertical crop format for 3x engagement on YouTube Shorts, Instagram Reels, and Facebook.',
-    'Keep the bottom punchline under 8 words to sharpen the comedic comedic delivery.',
-    tone !== 'savage' 
-      ? 'Remix in Savage Mode to increase comment section debate and repost velocity.'
-      : 'Pair with a Vine Boom sound effect for maximum short-form video impact.'
-  ];
+  // Keep exactly 3 varied, relevant suggestions rather than a fixed generic list
+  const finalSuggestions = suggestions.slice(0, 3);
 
+  // Legacy numeric fields — not shown to users, kept only so the existing type/data shape holds.
   return {
-    totalScore,
-    ratingLabel,
+    totalScore: 0,
+    ratingLabel: 'Solid Meme',
     breakdown: {
-      hook,
-      relatability,
-      timing,
-      caption,
-      visual,
-      shareability
+      hook: 0,
+      relatability: 0,
+      timing: 0,
+      caption: 0,
+      visual: 0,
+      shareability: 0
     },
-    suggestions
+    suggestions: finalSuggestions
   };
 }

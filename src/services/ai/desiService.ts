@@ -87,11 +87,16 @@ export function generateDesiMemeConcept(idea: string): GeneratedMemeConcept {
 
   const template = MEME_TEMPLATES.find((t) => t.id === matched.templateId) || MEME_TEMPLATES[0];
 
-  // If user provided custom idea, customize top text
+  // If user provided custom idea, customize top text with some structural variety
   let top = matched.topText;
   let bottom = matched.bottomText;
   if (idea && idea.trim().length > 3) {
-    top = `WHEN ${idea.trim().toUpperCase()}`;
+    const frames = [
+      `WHEN ${idea.trim().toUpperCase()}`,
+      `${idea.trim().toUpperCase()}`,
+      `US EVERY TIME: ${idea.trim().toUpperCase()}`
+    ];
+    top = frames[Math.floor(Math.random() * frames.length)];
     bottom = `${matched.bottomText}`;
   }
 

@@ -3,7 +3,7 @@ import { Sparkles, Wand2, Plus, Copy, Check, ArrowRight, Layers } from 'lucide-r
 import { useMeme } from '../../context/MemeContext';
 import { AICaptionResult, TextElement } from '../../types';
 import { CAPTION_CATEGORIES } from '../../data/humorDatabase';
-import { generateAICaptions, hasApiKeyConfigured } from '../../services/aiService';
+import { generateAICaptions } from '../../services/aiService';
 
 export const AICaptionsPanel: React.FC = () => {
   const { project, setTopText, setBottomText, addElement } = useMeme();
@@ -12,12 +12,15 @@ export const AICaptionsPanel: React.FC = () => {
   const [captions, setCaptions] = useState<AICaptionResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  // Honest, evidence-based label — only claims "live" after an actual live response, never assumed upfront
+  const [wasLiveAPI, setWasLiveAPI] = useState<boolean | null>(null);
 
   const handleGenerateCaptions = async () => {
     setIsLoading(true);
     try {
-      const { captions: generated } = await generateAICaptions(userPrompt, selectedCategory);
+      const { captions: generated, isFromLiveAPI } = await generateAICaptions(userPrompt, selectedCategory);
       setCaptions(generated);
+      setWasLiveAPI(isFromLiveAPI);
     } catch (err) {
       console.error('Caption generation error:', err);
     } finally {
@@ -69,7 +72,7 @@ export const AICaptionsPanel: React.FC = () => {
             <span>✨</span> AI Meme Caption Generator
           </span>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-dark-800 text-slate-400">
-            {hasApiKeyConfigured() ? '✨ Live Gemini API' : '🧠 Smart Humor Engine'}
+            {wasLiveAPI === true ? '✨ Live AI Response' : '🧠 Smart Humor Engine'}
           </span>
         </div>
         <p className="text-xs text-slate-400">

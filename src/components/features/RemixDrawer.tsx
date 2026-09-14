@@ -1,9 +1,10 @@
 import React from 'react';
-import { X, RefreshCw, Sparkles, Flame, Heart, Zap, Film, ArrowRight } from 'lucide-react';
+import { X, RefreshCw } from 'lucide-react';
 import { useMeme } from '../../context/MemeContext';
 import { remixMemeConcept, RemixType } from '../../services/ai/remixService';
 import { MEME_TEMPLATES } from '../../data/templatesData';
 import { soundService } from '../../services/soundService';
+import { useEscapeToClose } from '../../hooks/useEscapeToClose';
 
 export const RemixDrawer: React.FC = () => {
   const {
@@ -13,6 +14,7 @@ export const RemixDrawer: React.FC = () => {
     setCurrentUniverse,
     currentUniverse
   } = useMeme();
+  useEscapeToClose(() => setSelectedRemixConcept(null), !!selectedRemixConcept);
 
   if (!selectedRemixConcept) return null;
 
@@ -33,132 +35,98 @@ export const RemixDrawer: React.FC = () => {
     loadConceptIntoStudio(remixed);
   };
 
-  const remixOptions: { type: RemixType; label: string; icon: string; desc: string; color: string }[] = [
-    {
-      type: 'swap_template',
-      label: 'Random Template Swap',
-      icon: '🎲',
-      desc: 'Keep same joke, switch to a fresh visual template',
-      color: 'border-brand-purple/40 hover:border-brand-purple'
-    },
-    {
-      type: 'more_savage',
-      label: 'More Savage Burn',
-      icon: '💀',
-      desc: 'Dial up the emotional damage & spicy punchline',
-      color: 'border-brand-fire/40 hover:border-brand-fire'
-    },
-    {
-      type: 'more_wholesome',
-      label: 'More Wholesome',
-      icon: '❤️',
-      desc: 'Turn the punchline into a sweet, feel-good moment',
-      color: 'border-brand-pink/40 hover:border-brand-pink'
-    },
-    {
-      type: 'more_desi',
-      label: 'Desi / Hinglish Vibe',
-      icon: '🇮🇳',
-      desc: 'Inject Bollywood & Indian relatable humor',
-      color: 'border-brand-yellow/40 hover:border-brand-yellow'
-    },
-    {
-      type: 'more_genz',
-      label: 'More Gen-Z Slang',
-      icon: '💅',
-      desc: 'Slay, no cap, fr fr existential chaos',
-      color: 'border-brand-cyan/40 hover:border-brand-cyan'
-    },
-    {
-      type: 'shorter',
-      label: 'Ultra Short Punchline',
-      icon: '⚡',
-      desc: 'Condense caption to under 4 words for maximum impact',
-      color: 'border-emerald-500/40 hover:border-emerald-500'
-    },
-    {
-      type: 'turn_video',
-      label: 'Convert to Video Reel Format',
-      icon: '🎬',
-      desc: 'Format for 9:16 short-form video with audio hooks',
-      color: 'border-brand-orange/40 hover:border-brand-orange'
-    }
+  // Fast, understandable transformations on the EXISTING remix engine — same idea, new take
+  const remixOptions: { type: RemixType; label: string; emoji: string }[] = [
+    { type: 'more_relatable', label: 'More Relatable', emoji: '😊' },
+    { type: 'more_savage', label: 'More Savage', emoji: '🔥' },
+    { type: 'more_absurd', label: 'More Chaotic', emoji: '💀' },
+    { type: 'more_desi', label: 'More Desi', emoji: '🇮🇳' },
+    { type: 'shorter', label: 'Shorter', emoji: '⚡' },
+    { type: 'more_unhinged', label: 'More Unhinged', emoji: '🤪' },
+    { type: 'corporate', label: 'Corporate', emoji: '💼' },
+    { type: 'different_punchline', label: 'Different Punchline', emoji: '🎲' }
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="w-full max-w-xl rounded-3xl bg-dark-900 border border-brand-orange/50 shadow-2xl flex flex-col overflow-hidden animate-scaleUp">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Remix"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm animate-fadeIn"
+      onClick={() => setSelectedRemixConcept(null)}
+    >
+      {/* Mobile: bottom sheet. Desktop: compact centered drawer/panel. */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl bg-[#0d0a20] border border-white/10 shadow-2xl flex flex-col overflow-hidden animate-scaleUp max-h-[85vh]"
+      >
+        {/* Drag handle (mobile) */}
+        <div className="sm:hidden flex justify-center pt-2.5 pb-1">
+          <div className="w-10 h-1 rounded-full bg-white/20" />
+        </div>
+
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-dark-800 bg-gradient-to-r from-brand-orange/20 via-transparent to-transparent">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-white/10">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-brand-orange/20 text-brand-yellow border border-brand-orange/40">
-              <RefreshCw className="w-5 h-5 animate-spin-slow" />
+            <div className="p-1.5 rounded-xl bg-brand-orange/15 text-brand-orange">
+              <RefreshCw className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-lg font-black font-anton uppercase tracking-wide text-slate-100">
-                10-WAY REMIX ENGINE
+              <h2 className="text-sm font-black font-anton uppercase tracking-wide text-slate-100">
+                Remix
               </h2>
-              <p className="text-xs text-slate-400">Preserve the idea, transform the presentation</p>
+              <p className="text-[11px] text-slate-400">Same idea, new take</p>
             </div>
           </div>
 
           <button
             onClick={() => setSelectedRemixConcept(null)}
-            className="p-2 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-400 hover:text-white transition"
+            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition"
+            aria-label="Close remix panel"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Current Concept Preview */}
-        <div className="p-4 bg-dark-950/60 border-b border-dark-800 flex items-center gap-3">
+        <div className="px-5 py-3 bg-black/20 border-b border-white/10 flex items-center gap-3">
           <img
             src={selectedRemixConcept.templatePreviewUrl}
             alt="Current meme"
-            className="w-16 h-16 rounded-xl object-contain bg-dark-900 border border-dark-700 p-1 shrink-0"
+            className="w-12 h-12 rounded-lg object-contain bg-black/30 border border-white/10 p-1 shrink-0"
           />
           <div className="flex-1 min-w-0">
-            <span className="text-[10px] font-black uppercase text-brand-orange block">ORIGINAL CONCEPT</span>
+            <span className="text-[9px] font-black uppercase text-slate-400 block">Original idea</span>
             <p className="text-xs font-bold text-slate-200 truncate">{selectedRemixConcept.topText}</p>
-            <p className="text-xs text-slate-400 truncate italic">{selectedRemixConcept.bottomText}</p>
           </div>
         </div>
 
-        {/* Remix Options Grid */}
-        <div className="p-5 flex flex-col gap-2.5 overflow-y-auto max-h-[60vh]">
-          <span className="text-xs font-black uppercase text-slate-300">Choose Remix Transformation</span>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        {/* Remix Options — thumb-friendly grid, scrollable if needed */}
+        <div className="p-4 overflow-y-auto">
+          <div className="grid grid-cols-2 gap-2">
             {remixOptions.map((opt) => (
               <button
                 key={opt.type}
                 onClick={() => handleApplyRemix(opt.type)}
-                className={`p-3 rounded-2xl bg-dark-850 border hover:bg-dark-800 transition text-left flex flex-col gap-1 group shadow-md hover:-translate-y-0.5 active:scale-98 ${opt.color}`}
+                className="min-h-[52px] px-3 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 active:scale-[0.97] border border-white/10 hover:border-pink-500/50 transition-all text-left flex items-center gap-2"
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl group-hover:scale-110 transition-transform">{opt.icon}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-white group-hover:translate-x-1 transition" />
-                </div>
-                <span className="font-black text-xs text-slate-100">{opt.label}</span>
-                <span className="text-[10px] text-slate-400 leading-tight">{opt.desc}</span>
+                <span className="text-lg shrink-0">{opt.emoji}</span>
+                <span className="font-bold text-xs text-slate-100 leading-tight">{opt.label}</span>
               </button>
             ))}
           </div>
 
-          {/* Direct Template Picker for Swap */}
-          <div className="pt-2">
-            <span className="text-xs font-black uppercase text-slate-400 block mb-2">Or Swap to Specific Template:</span>
+          {/* Secondary: swap the visual template, keep the joke */}
+          <div className="pt-4">
+            <span className="text-[10px] font-black uppercase text-slate-400 block mb-2">Or swap the template</span>
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
               {MEME_TEMPLATES.slice(0, 6).map((tpl) => (
                 <button
                   key={tpl.id}
                   onClick={() => handleApplyRemix('swap_template', tpl.id)}
-                  className="w-20 shrink-0 p-1.5 rounded-xl bg-dark-850 hover:bg-dark-800 border border-dark-700 hover:border-brand-purple transition flex flex-col items-center gap-1 group"
+                  className="w-16 shrink-0 p-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/50 transition flex flex-col items-center gap-1"
                 >
-                  <img src={tpl.previewUrl} alt={tpl.title} className="w-12 h-12 object-contain rounded" />
-                  <span className="text-[9px] font-bold text-slate-300 truncate max-w-full group-hover:text-white">
-                    {tpl.title}
-                  </span>
+                  <img src={tpl.previewUrl} alt={tpl.title} className="w-10 h-10 object-contain rounded" />
                 </button>
               ))}
             </div>
