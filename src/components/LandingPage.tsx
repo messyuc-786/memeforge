@@ -57,6 +57,17 @@ export const LandingPage: React.FC = () => {
     'Saying "I am going to sleep early tonight" at 3:15 AM'
   ];
 
+  // Real topic quick-fills — each routes through the existing Forge pipeline with a real
+  // idea + a real supported tone. Not a separate system, just pre-filled prompts.
+  const TOPIC_CHIPS: { label: string; idea: string; tone: MemeTone }[] = [
+    { label: 'Desi', idea: 'Relatives asking when the wedding is happening', tone: 'desi' },
+    { label: 'Work', idea: 'When the meeting could have been an email', tone: 'corporate' },
+    { label: 'Cricket', idea: 'When India needs 6 runs off the last ball', tone: 'savage' },
+    { label: 'College', idea: 'Finishing the whole syllabus the night before the exam', tone: 'relatable' },
+    { label: 'Family', idea: 'Mom asking why the light is on in an empty room', tone: 'wholesome' },
+    { label: 'Relatable', idea: 'Saying "just 5 more minutes" and waking up 2 hours later', tone: 'relatable' }
+  ];
+
   const handleGenerate = async (ideaOverride?: string, toneOverride?: MemeTone) => {
     if (isGeneratingUniverse) return; // prevent duplicate/overlapping submissions
     const ideaToUse = ideaOverride ?? (activeIdea.trim() || sampleIdeas[0]);
@@ -79,7 +90,7 @@ export const LandingPage: React.FC = () => {
   // Starter demo memes — real internet-classic templates, not the same character photo
   // repeated in every card. Each one is a genuine template already in the library.
   const templateById = (id: string) => MEME_TEMPLATES.find((t) => t.id === id) ?? MEME_TEMPLATES[0];
-  const STARTER_MEMES: { id: string; name: string; img: string; caption: string; idea: string; tone: MemeTone }[] = [
+  const STARTER_MEMES: { id: string; name: string; img: string; caption: string; idea: string; tone: MemeTone; wide?: boolean }[] = [
     {
       id: 'overthinking',
       name: 'Drake Hotline Approval',
@@ -90,11 +101,12 @@ export const LandingPage: React.FC = () => {
     },
     {
       id: 'meeting',
-      name: 'Panik Kalm Panik',
-      img: templateById('panik-kalm-panik').previewUrl,
-      caption: '"LET\'S CIRCLE BACK" — MY BRAIN DURING THE MONDAY MEETING',
+      name: 'Distracted Boyfriend',
+      img: templateById('distracted-boyfriend').previewUrl,
+      caption: 'BAS 5 MINUTE AUR... SAYS EVERY MEETING, EVER',
       idea: 'My brain during the Monday morning meeting',
-      tone: 'savage'
+      tone: 'savage',
+      wide: true
     },
     {
       id: 'food',
@@ -108,9 +120,27 @@ export const LandingPage: React.FC = () => {
       id: 'reacting',
       name: 'Woman Yelling at Cat',
       img: templateById('woman-yelling-at-cat').previewUrl,
-      caption: '"ARE YOU OKAY?" ME, VISIBLY NOT OKAY',
+      caption: 'SALARY AAYI THI. SALARY GAYI KAHAN?',
       idea: 'When someone asks if I\'m okay and I clearly am not',
-      tone: 'unhinged'
+      tone: 'unhinged',
+      wide: true
+    },
+    {
+      id: 'coding',
+      name: 'Developer At 3 AM',
+      img: templateById('coding-at-3am').previewUrl,
+      caption: 'IT WORKS. NOBODY KNOWS WHY. DO NOT TOUCH IT.',
+      idea: 'Fixing a bug at 3 AM with code I do not remember writing',
+      tone: 'clever',
+      wide: true
+    },
+    {
+      id: 'brain',
+      name: 'Expanding Galaxy Brain',
+      img: templateById('expanding-galaxy-brain').previewUrl,
+      caption: 'LEVEL 4 UNDERSTANDING: STILL DIDN\'T READ THE ASSIGNMENT',
+      idea: 'Pretending to understand the group project at the last minute',
+      tone: 'absurd'
     }
   ];
 
@@ -260,6 +290,23 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Topic quick-fills — real prompts, tap to load into the box above */}
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1">
+              {TOPIC_CHIPS.map((topic) => (
+                <button
+                  key={topic.label}
+                  onClick={() => {
+                    setActiveIdea(topic.idea);
+                    setSelectedTone(topic.tone);
+                    soundService.playPop();
+                  }}
+                  className="shrink-0 px-3 py-1 rounded-full bg-transparent hover:bg-white/5 text-slate-400 hover:text-white text-[11px] font-bold uppercase tracking-wide whitespace-nowrap transition border border-dashed border-white/15"
+                >
+                  {topic.label}
+                </button>
+              ))}
+            </div>
+
             {/* Main Action CTA Button: FORGE */}
             <button
               onClick={() => handleGenerate()}
@@ -353,16 +400,18 @@ export const LandingPage: React.FC = () => {
         />
       </section>
 
-      {/* 2. STARTER MEME CAROUSEL — click any card to instantly forge that idea */}
-      <section className="w-full px-3 sm:px-6 pb-8">
+      {/* 2. DISCOVERY — Pinterest-style masonry, not a uniform card grid. Real templates,
+             varied sizes, slight rotation/tape treatment for a hand-arranged feel. */}
+      <section className="w-full px-3 sm:px-6 pb-10">
         <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-end justify-between mb-4">
             <div className="text-left">
-              <h2 className="text-base sm:text-lg font-black font-anton uppercase tracking-wide text-white">
-                Need a spark?
+              <h2 className="text-lg sm:text-xl font-black font-anton uppercase tracking-wide text-white flex items-center gap-2">
+                <span>Aaj Internet Pe Kya Chal Raha Hai?</span>
+                <span aria-hidden="true">🔥</span>
               </h2>
-              <p className="text-xs text-slate-400 font-semibold">
-                Pick a vibe. Make it yours.
+              <p className="text-xs text-slate-400 font-semibold mt-0.5">
+                Stuff worth sending to the group chat.
               </p>
             </div>
             <button
@@ -376,35 +425,39 @@ export const LandingPage: React.FC = () => {
               <span aria-hidden="true">→</span>
             </button>
           </div>
-          <div className="flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-3 px-3 sm:mx-0 sm:px-0">
-            {STARTER_MEMES.map((meme) => (
-              <button
-                key={meme.id}
-                onClick={() => {
-                  soundService.playPop();
-                  handleGenerate(meme.idea, meme.tone);
-                }}
-                className="group shrink-0 snap-start w-40 sm:w-44 rounded-2xl bg-[#0d0a20] border border-white/10 hover:border-pink-500/50 overflow-hidden text-left transition-all duration-150 active:scale-[0.97]"
-              >
-                <div className="relative h-40 sm:h-44 overflow-hidden bg-[#0d0a20]">
-                  <img
-                    src={meme.img}
-                    alt={meme.name}
-                    className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent" />
-                  <p className="absolute inset-x-0 bottom-0 p-2 text-white text-[11px] font-black uppercase leading-tight [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]">
-                    {meme.caption}
-                  </p>
-                </div>
-                <div className="px-2.5 py-2 flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-slate-400">{meme.name}</span>
-                  <span className="text-[10px] font-black uppercase text-pink-400 opacity-0 group-hover:opacity-100 transition">
-                    Remix →
-                  </span>
-                </div>
-              </button>
-            ))}
+
+          <div className="columns-2 sm:columns-3 gap-3 [column-fill:_balance]">
+            {STARTER_MEMES.map((meme, i) => {
+              const rotate = ['-rotate-1', 'rotate-1', 'rotate-0', 'rotate-1', '-rotate-1', 'rotate-0'][i % 6];
+              return (
+                <button
+                  key={meme.id}
+                  onClick={() => {
+                    soundService.playPop();
+                    handleGenerate(meme.idea, meme.tone);
+                  }}
+                  className={`group relative block w-full mb-3 break-inside-avoid rounded-xl bg-[#0d0a20] border border-white/10 hover:border-pink-500/50 overflow-hidden text-left transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.97] ${rotate}`}
+                >
+                  {/* Tape corner — tactile, not decorative filler: signals "pinned" content */}
+                  <span className="absolute -top-1.5 left-4 w-8 h-4 bg-amber-200/25 border border-amber-100/20 rotate-[-8deg] z-10" aria-hidden="true" />
+                  <div className={`relative w-full overflow-hidden bg-[#0d0a20] ${meme.wide ? 'aspect-video' : 'aspect-square'}`}>
+                    <img
+                      src={meme.img}
+                      alt={meme.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+                    <p className="absolute inset-x-0 bottom-0 p-2.5 text-white text-[11px] font-black uppercase leading-tight [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]">
+                      {meme.caption}
+                    </p>
+                    <span className="absolute top-2 right-2 text-[9px] font-black uppercase text-white bg-black/50 px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">
+                      Remix →
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
