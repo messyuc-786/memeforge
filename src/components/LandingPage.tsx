@@ -176,7 +176,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Subtitle */}
           <p className="text-sm sm:text-base md:text-lg text-slate-400 font-semibold max-w-xl mb-4 sm:mb-7 leading-relaxed">
-            Turn your thoughts, moments and chaos into share-worthy memes with AI.
+            Whatever happened, turn it into a meme.
           </p>
 
           {/* --- GENERATOR CONSOLE --- */}
@@ -185,7 +185,7 @@ export const LandingPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-pink-400" />
-                <span>What happened?</span>
+                <span>What's on your mind?</span>
               </span>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-slate-400 font-mono">
@@ -274,7 +274,7 @@ export const LandingPage: React.FC = () => {
               ) : (
                 <>
                   <Flame className="w-5 h-5 text-yellow-200 fill-yellow-200" />
-                  <span>FORGE MY MEMES</span>
+                  <span>FORGE MY MEME →</span>
                 </>
               )}
             </button>
@@ -356,13 +356,25 @@ export const LandingPage: React.FC = () => {
       {/* 2. STARTER MEME CAROUSEL — click any card to instantly forge that idea */}
       <section className="w-full px-3 sm:px-6 pb-8">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center sm:text-left mb-3">
-            <h2 className="text-base sm:text-lg font-black font-anton uppercase tracking-wide text-white">
-              Need inspiration?
-            </h2>
-            <p className="text-xs text-slate-400 font-semibold">
-              Try a few popular ideas, or explore what's trending.
-            </p>
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-left">
+              <h2 className="text-base sm:text-lg font-black font-anton uppercase tracking-wide text-white">
+                Need a spark?
+              </h2>
+              <p className="text-xs text-slate-400 font-semibold">
+                Pick a vibe. Make it yours.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                soundService.playPop();
+                setIsTemplatesModalOpen(true);
+              }}
+              className="shrink-0 text-xs font-black text-pink-400 hover:text-pink-300 transition flex items-center gap-1"
+            >
+              <span>See all</span>
+              <span aria-hidden="true">→</span>
+            </button>
           </div>
           <div className="flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-3 px-3 sm:mx-0 sm:px-0">
             {STARTER_MEMES.map((meme) => (
