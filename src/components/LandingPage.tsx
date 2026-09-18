@@ -10,6 +10,7 @@ import {
 import { useMeme } from '../context/MemeContext';
 import { MemeTone } from '../types';
 import { soundService } from '../services/soundService';
+import { MEME_TEMPLATES } from '../data/templatesData';
 import { ContentUniverseSection } from './features/ContentUniverseSection';
 import { CategoryExplorer } from './features/CategoryExplorer';
 import { TrendsSection } from './features/TrendsSection';
@@ -75,37 +76,39 @@ export const LandingPage: React.FC = () => {
     }
   };
 
-  // Starter demo memes — unnamed MemeForge mascot art, click to instantly forge that idea
+  // Starter demo memes — real internet-classic templates, not the same character photo
+  // repeated in every card. Each one is a genuine template already in the library.
+  const templateById = (id: string) => MEME_TEMPLATES.find((t) => t.id === id) ?? MEME_TEMPLATES[0];
   const STARTER_MEMES: { id: string; name: string; img: string; caption: string; idea: string; tone: MemeTone }[] = [
     {
       id: 'overthinking',
-      name: 'Me in a Monday meeting',
-      img: '/characters/ash-hero.png',
-      caption: 'ME AT 2AM: "WHAT IF I REPLIED WEIRD 3 YEARS AGO"',
+      name: 'Drake Hotline Approval',
+      img: templateById('drake-choice').previewUrl,
+      caption: 'REPLYING NORMALLY VS OVERTHINKING IT FOR 3 HOURS',
       idea: 'Me lying awake overthinking a text I sent three years ago',
       tone: 'relatable'
     },
     {
       id: 'meeting',
-      name: 'Study plan vs reality',
-      img: '/characters/ash-hero.png',
-      caption: '"LET\'S CIRCLE BACK" — ME, AVOIDING THE ACTUAL ANSWER',
+      name: 'Panik Kalm Panik',
+      img: templateById('panik-kalm-panik').previewUrl,
+      caption: '"LET\'S CIRCLE BACK" — MY BRAIN DURING THE MONDAY MEETING',
       idea: 'My brain during the Monday morning meeting',
       tone: 'savage'
     },
     {
       id: 'food',
-      name: 'Good food = good mood',
-      img: '/characters/ashi-hero.png',
-      caption: 'SEEING FOOD ARRIVE: NEW PERSONALITY UNLOCKED',
+      name: 'Trade Offer',
+      img: templateById('trade-offer').previewUrl,
+      caption: 'MY DIET FOR WHATEVER JUST ARRIVED AT THE DOOR',
       idea: 'My entire personality changing the second food arrives',
       tone: 'wholesome'
     },
     {
       id: 'reacting',
-      name: 'When coffee is a personality trait',
-      img: '/characters/ashi-hero.png',
-      caption: '"I\'M FINE." ALSO ME: *visibly not fine*',
+      name: 'Woman Yelling at Cat',
+      img: templateById('woman-yelling-at-cat').previewUrl,
+      caption: '"ARE YOU OKAY?" ME, VISIBLY NOT OKAY',
       idea: 'When someone asks if I\'m okay and I clearly am not',
       tone: 'unhinged'
     }
@@ -132,8 +135,8 @@ export const LandingPage: React.FC = () => {
     <div className="w-full flex flex-col cosmic-nebula-bg text-slate-100 overflow-x-hidden min-h-screen">
       {/* 1. HERO / GENERATOR SECTION */}
       <section className="relative w-full pt-5 sm:pt-10 pb-8 sm:pb-10 px-3 sm:px-6 overflow-hidden">
-        {/* Single restrained glow — sets mood without drowning the UI */}
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[46rem] h-[26rem] bg-gradient-to-b from-purple-600/18 via-pink-500/10 to-transparent rounded-full blur-[100px] pointer-events-none" />
+        {/* Faint ambient tint — mood, not a glow effect */}
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[46rem] h-[22rem] bg-purple-600/8 rounded-full blur-[110px] pointer-events-none" />
 
         {/* MemeForge mascots framing the generator — visual support, not the focus */}
         <div className="hidden xl:block absolute left-0 2xl:left-4 bottom-0 pointer-events-none select-none">
@@ -161,18 +164,12 @@ export const LandingPage: React.FC = () => {
 
         {/* --- MAIN HERO CONTENT CONTAINER --- */}
         <div className="max-w-3xl mx-auto flex flex-col items-center text-center relative z-20">
-          {/* Brand Tagline Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 text-slate-300 text-[11px] font-bold uppercase tracking-wider mb-3 sm:mb-5 border border-white/10">
-            <span className="text-amber-400">⚡</span>
-            <span>AI underneath. You on the surface.</span>
-          </div>
-
           {/* Dominant Editorial Headline */}
-          <div className="flex flex-col items-center leading-none mb-2 sm:mb-3">
+          <div className="flex flex-col items-center leading-none mb-2 sm:mb-3 mt-2 sm:mt-0">
             <span className="font-caveat text-2xl sm:text-4xl md:text-5xl text-amber-300 font-bold -rotate-2 transform mb-0.5 sm:mb-1">
               Idea in,
             </span>
-            <h1 className="font-anton text-4xl sm:text-7xl md:text-8xl uppercase tracking-tight text-white drop-shadow-[0_2px_0_rgba(236,72,153,0.9)]">
+            <h1 className="font-anton text-4xl sm:text-7xl md:text-8xl uppercase tracking-tight text-white">
               MEME OUT.
             </h1>
           </div>
@@ -183,7 +180,7 @@ export const LandingPage: React.FC = () => {
           </p>
 
           {/* --- GENERATOR CONSOLE --- */}
-          <div className="w-full rounded-3xl bg-[#0d0a20]/95 p-4 sm:p-6 flex flex-col gap-4 text-left border border-white/10 shadow-2xl">
+          <div className="w-full rounded-2xl bg-[#0d0a20] p-4 sm:p-6 flex flex-col gap-4 text-left border border-white/10 shadow-md">
             {/* Input Header & Character Counter */}
             <div className="flex items-center justify-between">
               <span className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
@@ -251,7 +248,7 @@ export const LandingPage: React.FC = () => {
                       aria-pressed={isSelected}
                       className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-extrabold whitespace-nowrap transition-all duration-150 flex items-center gap-1.5 border ${
                         isSelected
-                          ? 'bg-pink-500 text-white border-pink-400 shadow-[0_0_0_2px_rgba(236,72,153,0.25)]'
+                          ? 'bg-pink-500 text-white border-pink-400'
                           : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10'
                       }`}
                     >
@@ -377,12 +374,13 @@ export const LandingPage: React.FC = () => {
                 }}
                 className="group shrink-0 snap-start w-40 sm:w-44 rounded-2xl bg-[#0d0a20] border border-white/10 hover:border-pink-500/50 overflow-hidden text-left transition-all duration-150 active:scale-[0.97]"
               >
-                <div className="relative h-40 sm:h-44 overflow-hidden bg-gradient-to-b from-[#1a1442] to-[#0d0a20]">
+                <div className="relative h-40 sm:h-44 overflow-hidden bg-[#0d0a20]">
                   <img
                     src={meme.img}
                     alt={meme.name}
-                    className="absolute inset-x-0 bottom-0 w-full h-[115%] object-cover object-top transition-transform duration-200 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent" />
                   <p className="absolute inset-x-0 bottom-0 p-2 text-white text-[11px] font-black uppercase leading-tight [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]">
                     {meme.caption}
                   </p>
