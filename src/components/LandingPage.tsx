@@ -18,13 +18,16 @@ import { CommunitySection } from './features/CommunitySection';
 import { Footer } from './Footer';
 import { LayoutTemplate, ImagePlus, Clapperboard, ChevronRight } from 'lucide-react';
 
+// Ordered to lead with the approved mockup's chip set (Relatable, Savage, Wholesome,
+// Corporate, Desi), then the remaining real tones the product already supports.
 const TONES: { id: MemeTone; label: string; emoji: string }[] = [
   { id: 'relatable', label: 'Relatable', emoji: '😊' },
   { id: 'savage', label: 'Savage', emoji: '🔥' },
+  { id: 'wholesome', label: 'Wholesome', emoji: '❤️' },
+  { id: 'corporate', label: 'Corporate', emoji: '💼' },
+  { id: 'desi', label: 'Desi', emoji: '🇮🇳' },
   { id: 'unhinged', label: 'Unhinged', emoji: '💀' },
   { id: 'clever', label: 'Clever', emoji: '🧠' },
-  { id: 'wholesome', label: 'Wholesome', emoji: '❤️' },
-  { id: 'desi', label: 'Desi', emoji: '🇮🇳' },
   { id: 'absurd', label: 'Absurd', emoji: '🤪' }
 ];
 
@@ -176,7 +179,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Subtitle */}
           <p className="text-sm sm:text-base md:text-lg text-slate-400 font-semibold max-w-xl mb-4 sm:mb-7 leading-relaxed">
-            Type the moment. Pick the vibe. Forge hits your feed can't scroll past.
+            Turn your thoughts, moments and chaos into share-worthy memes with AI.
           </p>
 
           {/* --- GENERATOR CONSOLE --- */}
